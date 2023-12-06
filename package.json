@@ -1,0 +1,62 @@
+{
+  "name": "star-wars-v2",
+  "author": "Filip Lai",
+  "private": true,
+  "version": "0.0.1",
+  "type": "module",
+  "config": {
+    "PORT": "4001",
+    "BASENAME": "/",
+    "REPOSITORY": "https://github.com/[USER]/[REPOSITORY].git"
+  },
+  "scripts": {
+    "start": "npm run dev",
+    "dev": "concurrently --raw --kill-others --passthrough-arguments \"npm run dev:win || npm run dev:linux\"",
+    "dev:linux": "vite --port $npm_package_config_port",
+    "dev:win": "ver && vite --port %npm_package_config_port%",
+    "build": "tsc && vite build",
+    "preview": "vite preview",
+    "lint": "eslint . --ext js,cjs,ts,tsx --report-unused-disable-directives --max-warnings 0 --debug",
+    "lint:fix": "eslint . --ext js,cjs,ts,tsx --report-unused-disable-directives --max-warnings 0 --fix",
+    "prettier": "prettier --check ./**/*.{js,cjs,ts,tsx,css,scss,md,json} --cache --debug-check",
+    "prettier:fix": "prettier --write ./**/*.{js,cjs,ts,tsx,css,scss,md,json} --config ./.prettierrc.cjs --cache",
+    "format": "npm run prettier:fix && npm run lint:fix",
+    "type:check": "npx tsc --noEmit --watch",
+    "git:pull": "concurrently --raw --kill-others --passthrough-arguments \"npm run git:pull:win || npm run git:pull:linux\"",
+    "git:pull:linux": "git pull $npm_package_config_REPOSITORY --verbose",
+    "git:pull:win": "ver && git pull %npm_package_config_REPOSITORY% --verbose",
+    "git:force-pull": "concurrently --raw --kill-others --passthrough-arguments \"npm run git:force-pull:win || npm run git:force-pull:linux\"",
+    "git:force-pull:linux": "git remote add origin $npm_package_config_REPOSITORY ; git fetch --all && git reset --hard origin/master",
+    "git:force-pull:win": "ver && (git remote add origin %npm_package_config_REPOSITORY% ; git fetch --all && git reset --hard origin/master)",
+    "kill": "kill -9 $(lsof -t -i:$(grep '^PORT' .env | cut -d '=' -f2 | tr -d '\\n\\r'))"
+  },
+  "dependencies": {
+    "framer-motion": "^10.16.4",
+    "axios": "^1.5.1",
+    "react": "^18.2.0",
+    "react-dom": "^18.2.0",
+    "react-router-dom": "^6.16.0"
+  },
+  "devDependencies": {
+    "@types/react": "^18.2.15",
+    "@types/react-dom": "^18.2.7",
+    "@typescript-eslint/eslint-plugin": "^6.0.0",
+    "@typescript-eslint/parser": "^6.0.0",
+    "@vitejs/plugin-react": "^4.0.3",
+    "autoprefixer": "^10.4.16",
+    "concurrently": "^8.2.1",
+    "eslint": "^8.45.0",
+    "eslint-config-prettier": "^9.0.0",
+    "eslint-plugin-prettier": "^5.0.1",
+    "eslint-plugin-react": "^7.33.2",
+    "eslint-plugin-react-hooks": "^4.6.0",
+    "eslint-plugin-react-refresh": "^0.4.3",
+    "postcss": "^8.4.31",
+    "postcss-import": "^15.1.0",
+    "prettier": "^3.0.3",
+    "prettier-plugin-tailwindcss": "^0.5.5",
+    "tailwindcss": "^3.3.3",
+    "typescript": "^5.0.2",
+    "vite": "^4.4.5"
+  }
+}

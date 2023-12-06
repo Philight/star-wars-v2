@@ -1,0 +1,31 @@
+/* TAILWIND BASE */
+
+@import 'tailwindcss/base';
+@import 'tailwindcss/components';
+@import 'tailwindcss/utilities';
+
+/*
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+*/
+
+/* INCLUDE / STATIC FILES */
+
+@import './include/fonts';
+@import './include/initial';
+@import './include/utilities';
+
+/* CUSTOMIZABLE */
+
+@import './variables';
+@import './theme';
+@import './components';
+
+/*
+@import './customization';
+*/
+
+/*
+@import-normalize;
+*/
