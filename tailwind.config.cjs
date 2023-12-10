@@ -33,6 +33,7 @@ module.exports = {
         gray: 'rgba(var(--color-gray) / <alpha-value>)',
         'gray-light': 'rgba(var(--color-gray-light) / <alpha-value>)',
         'gray-dark': 'rgba(var(--color-gray-dark) / <alpha-value>)',
+        'gray-darker': 'rgba(var(--color-gray-darker) / <alpha-value>)',
 
         // PALETTE
         'blue-dark': 'rgba(var(--color-blue-dark) / <alpha-value>)',
@@ -78,6 +79,7 @@ module.exports = {
         screen: 'var(--screen-height, 100vh)',
         'gutter-outer-x': 'var(--gutter-outer-x)',
         'gutter-outer-y': 'var(--gutter-outer-y)',
+        '1/5': '20%',
         full: '100%',
         7.5: '1.875rem',
         10.5: '2.625rem',

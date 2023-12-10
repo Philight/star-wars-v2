@@ -3,8 +3,8 @@ import React, { lazy, Suspense } from 'react';
 import { BrowserRouter, Route, Routes } from 'react-router-dom';
 
 const LandingLayout = lazy(() => import('@layouts/LandingLayout'));
-const AboutLayout = lazy(() => import('@layouts/AboutLayout'));
-//const ContactLayout = lazy(() => import('@layouts/ContactLayout'));
+const AvatarsLayout = lazy(() => import('@layouts/AvatarsLayout'));
+// const ContactLayout = lazy(() => import('@layouts/ContactLayout'));
 
 // const LandingPage = lazy(() => import("@pages").then((module) => ({ default: module.LandingPage }) ));
 // const LandingPage = lazy(() => import("@pages").then( (module) => module.LandingPage ));
@@ -16,12 +16,11 @@ Promise.all(
 ).then((modules) => modules.forEach((module) => module.load()));
 */
 const StyleGuide = lazy(() => import('@pages/StyleGuide'));
-//const LandingPage = lazy(() => import('@pages/LandingPage'));
-//const AboutPage = lazy(() => import('@pages/AboutPage'));
-//const ContactPage = lazy(() => import('@pages/ContactPage'));
 
 import { Loader } from '@components/graphic';
 import ScrollToTop from '@components/util/ScrollToTop';
+
+import { DataProvider } from '@contexts/DataContext';
 
 import PACKAGE_JSON from 'ROOT/package.json';
 import { dynamicImport, type IImportMapping } from '@utils';
@@ -38,50 +37,44 @@ const ROUTE_TO_PAGE = {
   LANDING: {
     '/': 'LandingPage',
   },
-  ABOUT: {
-    '/about': 'AboutPage',
-    '/contact': 'ContactPage',
+  AVATARS: {
+    '/avatars': 'AvatarsPage',
+    '/detail/character/:id': 'AvatarsPage',
   },
 };
 
 const ROUTES = {
   LANDING: Object.keys(ROUTE_TO_PAGE.LANDING),
-  ABOUT: Object.keys(ROUTE_TO_PAGE.ABOUT),
+  AVATARS: Object.keys(ROUTE_TO_PAGE.AVATARS),
 };
 
 const landingLayoutImports: IImportMapping = dynamicImport(ROUTE_TO_PAGE.LANDING, {
   prefix: 'pages',
 });
-const aboutLayoutImports: IImportMapping = dynamicImport(ROUTE_TO_PAGE.ABOUT, { prefix: 'pages' });
+const avatarsLayoutImports: IImportMapping = dynamicImport(ROUTE_TO_PAGE.AVATARS, {
+  prefix: 'pages',
+});
 
 const App = (): IGenericComponent => {
   return (
     <BrowserRouter basename={PACKAGE_JSON.config.BASENAME}>
       <ScrollToTop>
         <Suspense fallback={<Loader />}>
-          <Routes>
-            <Route element={<LandingLayout />}>
-              {/*
-          <Route path="/" element={<LandingPage />} />
-          <Route path="/about" element={<AboutPage />} />
-          <Route path="/contact" element={<ContactPage />} />
-*/}
-              {ROUTES.LANDING.map((route, i) => (
-                <Route key={i} path={route} Component={landingLayoutImports[route]} />
-              ))}
-            </Route>
-            <Route element={<AboutLayout />}>
-              {ROUTES.ABOUT.map((route, i) => (
-                <Route key={i} path={route} Component={aboutLayoutImports[route]} />
-              ))}
-            </Route>
-            {/*
-        <Route path="/v2" element={<LandingLayout Page={LandingPage} />} />
-        <Route path="/v2/about" element={<AboutLayout Page={AboutPage} />} />
-        <Route path="/v2/contact" element={<ContactLayout Page={ContactPage} />} />
-*/}
-            <Route path="/style-guide" element={<StyleGuide />} />
-          </Routes>
+          <DataProvider>
+            <Routes>
+              <Route element={<LandingLayout />}>
+                {ROUTES.LANDING.map((route, i) => (
+                  <Route key={i} path={route} Component={landingLayoutImports[route]} />
+                ))}
+              </Route>
+              <Route element={<AvatarsLayout />}>
+                {ROUTES.AVATARS.map((route, i) => (
+                  <Route key={i} path={route} Component={avatarsLayoutImports[route]} />
+                ))}
+              </Route>
+              <Route path="/style-guide" element={<StyleGuide />} />
+            </Routes>
+          </DataProvider>
         </Suspense>
       </ScrollToTop>
     </BrowserRouter>

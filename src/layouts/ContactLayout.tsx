@@ -5,7 +5,7 @@ import { usePageData } from '@utils';
 
 import { IGenericComponent, IGenericProps } from '@@types/generic-types';
 interface IComponentProps extends IGenericProps {
-//  Page?: React.FC | React.Component | React.ReactNode | JSX.Element | React.ElementType;
+  //  Page?: React.FC | React.Component | React.ReactNode | JSX.Element | React.ElementType;
   Page?: React.ElementType;
 }
 

@@ -114,6 +114,8 @@
 }
 .subheading--lg {
   @apply text-2xl;
+  @apply font-normal;
+  @apply tracking-1;
 }
 .subheading--md {
   @apply text-lg;
@@ -128,10 +130,10 @@
 }
 .body--lg {
   @apply text-xl;
-  @apply tracking-1;
 }
 .body--md {
   @apply text-base;
+  @apply font-normal;
   @apply tracking-1;
 }
 .body--sm {
@@ -164,6 +166,7 @@
 
 .help-text {
   @apply font-help;
+  @apply text-gray-darker;
 }
 .help-text--md {
   @apply text-5xs tab-sm:text-sm;
@@ -213,7 +216,7 @@
 
 .btn--lg {
   @apply btn-text btn-text--lg;
-  @apply h-8 px-6 py-0.5 pt-px;
+  @apply h-9 px-6 py-0.5 pt-px;
   @media screen(tab-sm) {
     @apply h-10 px-8;
   }

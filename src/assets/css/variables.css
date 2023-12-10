@@ -16,10 +16,13 @@
   --font-sf-distant-galaxy-alternate: 'SF Distant Galaxy Alternate';
   --font-sf-distant-galaxy-symbols: 'SF Distant Galaxy Symbols';
 
-  --font-sf-distant-alt: var(--font-sf-distant-galaxy-outline), var(--font-sf-distant-galaxy-altoutline), var(--font-sf-distant-galaxy-alternate), var(--font-sf-distant-galaxy-symbols);
+  --font-sf-distant-alt: var(--font-sf-distant-galaxy-outline),
+    var(--font-sf-distant-galaxy-altoutline), var(--font-sf-distant-galaxy-alternate),
+    var(--font-sf-distant-galaxy-symbols);
 
   --font-family-heading: var(--font-tie-wing), var(--font-mono);
-  --font-family-subheading: var(--font-sf-distant-galaxy), var(--font-sf-distant-alt), var(--font-mono);
+  --font-family-subheading: var(--font-sf-distant-galaxy), var(--font-sf-distant-alt),
+    var(--font-mono);
   --font-family-body: var(--font-episode-i), var(--font-mono);
   --font-family-btn: var(--font-sf-distant-galaxy), var(--font-sf-distant-alt), var(--font-mono);
   --font-family-highlight: var(--font-tie-wing), var(--font-mono);
@@ -39,6 +42,7 @@
   --color-gray: 197 197 197;
   --color-gray-light: 241 241 241;
   --color-gray-dark: 159 159 159;
+  --color-gray-darker: 106 106 106;
 
   /* PALETTE */
 
@@ -49,7 +53,7 @@
   --color-blue-sky: 0 143 255;
 
   /* PRIMARY */
-  
+
   --color-white-primary: 255 255 255;
   --color-black-primary: 12 20 26;
   --color-blue-primary: 0 60 86;
@@ -58,7 +62,6 @@
   --color-primary: var(--color-hermes-orange);
   --color-secondary: var(--color-hermes-orange);
   --color-tertiary: var(--color-hermes-orange);
-
 
   /** 
     LAYOUT 

@@ -119,13 +119,17 @@ const FontSizes = (): IGenericComponent => (
           <tr>
             <td className={[].css()}>font-size</td>
             {Object.keys(TAILWIND_FONT_SIZES).map(col => (
-              <td key={col} className={[].css()}>{TAILWIND_FONT_SIZES[col]['font-size']}</td>
+              <td key={col} className={[].css()}>
+                {TAILWIND_FONT_SIZES[col]['font-size']}
+              </td>
             ))}
           </tr>
           <tr>
             <td className={[].css()}>line-height</td>
             {Object.keys(TAILWIND_FONT_SIZES).map(col => (
-              <td key={col} className={[].css()}>{TAILWIND_FONT_SIZES[col]['line-height']}</td>
+              <td key={col} className={[].css()}>
+                {TAILWIND_FONT_SIZES[col]['line-height']}
+              </td>
             ))}
           </tr>
         </tbody>

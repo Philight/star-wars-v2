@@ -37,7 +37,12 @@ export const Loader = (props: IComponentProps): IGenericComponent => {
       onClick={onClick}
     >
       <Layer className={'loader__background abs-fill-parent'} />
-      <Icon icon="infinity-8" animate={ANIM_PULSE.animate} transition={ANIM_PULSE.transition} />
+      <Icon
+        icon="logo"
+        isMultiColor
+        animate={ANIM_PULSE.animate}
+        transition={ANIM_PULSE.transition}
+      />
     </motion.figure>
   );
 };

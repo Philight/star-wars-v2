@@ -1,7 +1,7 @@
 /*
     1. mob-lg | 2. tab-sm | 3. tab-lg  | 4. desk-md
 */
-type DeviceType =
+type TDeviceType =
   | 'MOBILE_SM'
   | 'MOBILE_LG'
   | 'TABLET_SM'
@@ -12,7 +12,7 @@ type DeviceType =
   | 'DESKTOP_LG'
   | 'DESKTOP_XL';
 
-export const getGridDimensions = (DEVICE_TYPE: DeviceType): { rows: number; cols: number } => {
+export const getGridDimensions = (DEVICE_TYPE: TDeviceType): { rows: number; cols: number } => {
   switch (DEVICE_TYPE) {
     case 'MOBILE_SM':
     case 'MOBILE_LG':

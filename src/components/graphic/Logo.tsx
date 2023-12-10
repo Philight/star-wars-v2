@@ -1,5 +1,6 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
+import { motion } from 'framer-motion';
 
 import { Icon } from '@components/graphic';
 
@@ -9,11 +10,11 @@ interface IComponentProps extends IGenericProps {
   onClick?: React.MouseEventHandler<HTMLElement> | undefined;
 }
 
-export const Logo = ({ className, link, onClick }: IComponentProps): IGenericComponent => {
+export const Logo = ({ className, style, link, onClick }: IComponentProps): IGenericComponent => {
   return (
-    <figure className={['logo__c ', className].css()} onClick={onClick}>
+    <motion.figure className={['logo__c ', className].css()} onClick={onClick} style={style}>
       {link && <Link to={link} className="fill-absolute" />}
       <Icon icon="logo" isMultiColor />
-    </figure>
+    </motion.figure>
   );
 };

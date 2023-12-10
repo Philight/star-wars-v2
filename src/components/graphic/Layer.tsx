@@ -6,11 +6,7 @@ interface IComponentProps extends IGenericProps {
   onClick?: React.MouseEventHandler<HTMLCanvasElement> | undefined;
 }
 
-export const Layer = ({
-  className,
-  style,
-  onClick,
-}: IComponentProps): IGenericComponent => {
+export const Layer = ({ className, style, onClick }: IComponentProps): IGenericComponent => {
   return (
     <motion.canvas
       className={[`layer__c abs-fill-parent`, className].css()}

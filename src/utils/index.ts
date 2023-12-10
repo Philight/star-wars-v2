@@ -1,4 +1,5 @@
 export * from './ts/api';
+export * from './ts/array';
 export { openURL, getAppURL } from './ts/helpers';
 
 export * from './tsx/hoc';

@@ -1,7 +1,7 @@
 import React from 'react';
-import { Link } from 'react-router-dom';
+import { motion } from 'framer-motion';
 
-import { Icon } from '@components/graphic';
+import { Icon, Shape } from '@components/graphic';
 
 import { IGenericComponent, IGenericProps } from '@@types/generic-types';
 interface IComponentProps extends IGenericProps {
@@ -16,25 +16,33 @@ interface IComponentProps extends IGenericProps {
 }
 
 export const Button = (props: IComponentProps): IGenericComponent => {
-  const { className, children, style, type, size, icon, label, withShadow, onClick, disabled } =
-    props;
+  const {
+    className,
+    children,
+    style,
+    type,
+    size,
+    role,
+    icon,
+    label,
+    withShadow,
+    onClick,
+    disabled,
+  } = props;
 
   return (
-    <div className={[`button__c f-center`, className].css()} style={style}>
+    <motion.div className={[`button__c f-center`, className].css()} style={style}>
       <button
-        className={[
-          `button`,
-          type && `button--${type}`,
-          size && `button--${size}`,
-          !withShadow && 'no-shadow',
-        ].css()}
+        className={[`button`, type, size, !withShadow && 'no-shadow'].css()}
+        role={role}
         onClick={onClick}
         disabled={disabled}
       >
         {!!icon && <Icon icon={icon} />}
         {!!label && <label>{label}</label>}
+        <Shape className={`polygon`} />
         {children}
       </button>
-    </div>
+    </motion.div>
   );
 };

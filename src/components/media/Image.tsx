@@ -19,7 +19,7 @@ interface IComponentProps extends IGenericProps {
   isBkg?: boolean;
   initial?: Target | VariantLabels | boolean;
   animate?: AnimationControls | TargetAndTransition | VariantLabels | boolean;
-  transition?: Transition;  
+  transition?: Transition;
 }
 
 export const Image = (props: IComponentProps): IGenericComponent => {

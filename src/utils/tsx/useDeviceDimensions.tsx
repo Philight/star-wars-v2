@@ -12,14 +12,18 @@ const BREAKPOINTS = {
   MOBILE_SM: 0,
 };
 
-export interface IDeviceDimensions {
-  DEVICE_WIDTH: number;
-  DEVICE_HEIGHT: number;
-  DEVICE_TYPE: string;
-  DEVICE_IS_TOUCH: boolean;
-}
+export type TDeviceType =
+  | 'MOBILE_SM'
+  | 'MOBILE_LG'
+  | 'TABLET_SM'
+  | 'TABLET_MD'
+  | 'TABLET_LG'
+  | 'DESKTOP_SM'
+  | 'DESKTOP_MD'
+  | 'DESKTOP_LG'
+  | 'DESKTOP_XL';
 
-const getDeviceType = (width: number): string => {
+const getDeviceType = (width: number): TDeviceType => {
   for (const [DEVICE, MIN_WIDTH] of Object.entries(BREAKPOINTS)) {
     if (width >= MIN_WIDTH) {
       return DEVICE;
@@ -32,6 +36,13 @@ const isTouchDevice = (): boolean => {
   // @ts-ignore
   return 'ontouchstart' in window || navigator.maxTouchPoints > 0 || navigator.msMaxTouchPoints > 0;
 };
+
+export interface IDeviceDimensions {
+  DEVICE_WIDTH: number;
+  DEVICE_HEIGHT: number;
+  DEVICE_TYPE: string;
+  DEVICE_IS_TOUCH: boolean;
+}
 
 function getWindowDimensions(): IDeviceDimensions {
   const { innerWidth: DEVICE_WIDTH, innerHeight: DEVICE_HEIGHT } = window;

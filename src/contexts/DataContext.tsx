@@ -1,12 +1,13 @@
 import React, { PropsWithChildren, useReducer, createContext, useContext } from 'react';
-import { initialState, IState, dataReducer } from '@data';
+import { initialState, IData, IState, dataReducer } from '@data';
 
 export const DataContext = createContext();
 
 interface IContextType extends IState {
-  updateField: (fieldName: string, fieldValue: unknown) => void;
-  setLoading: (loading: boolean) => void;
-  setError: (error: Error | null) => void;
+  setLoading: (_loading: boolean) => void;
+  setError: (_error: Error | null) => void;
+  setData: (_data: IData) => void;
+  setTotalCount: (_count: number) => void;
 }
 
 export const DataProvider = ({ children }: PropsWithChildren<T>): React.FC<React.ReactNode> => {
@@ -30,31 +31,34 @@ export const DataProvider = ({ children }: PropsWithChildren<T>): React.FC<React
     });
   };
 
-  const setUser = (user: unknown): void => {
+  const setData = (data: IData): void => {
     dispatch({
-      type: 'SET_USER',
+      type: 'SET_DATA',
       payload: {
-        user,
+        data,
       },
     });
   };
 
-  const updateFields = (updatedFields: { [key: string]: string }): void => {
+  const setTotalCount = (count: number): void => {
     dispatch({
-      type: 'UPDATE_FIELDS',
+      type: 'SET_TOTAL_COUNT',
       payload: {
-        updatedFields,
+        count,
       },
     });
   };
 
   const contextValue = {
-    formData: state.formData,
-    user: state.user,
-    updateFields,
+    currentPage: state.currentPage,
+    data: state.data,
+    totalCount: state.totalCount,
+    loading: state.loading,
+    error: state.error,
     setLoading,
     setError,
-    setUser,
+    setData,
+    setTotalCount,
   };
 
   return <DataContext.Provider value={contextValue}>{children}</DataContext.Provider>;

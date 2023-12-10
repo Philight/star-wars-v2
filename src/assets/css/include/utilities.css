@@ -60,6 +60,14 @@
   @apply flex items-center justify-center;
 }
 
+.f-center-x {
+  @apply flex justify-center;
+}
+
+.f-center-y {
+  @apply flex items-center;
+}
+
 .f-full {
   @apply shrink-0 grow-0 basis-full;
 }

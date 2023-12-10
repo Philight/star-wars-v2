@@ -1,10 +1,18 @@
 import React, { forwardRef } from 'react';
 import { Link } from 'react-router-dom';
-import { motion, Transition, AnimationControls, Target, TargetAndTransition, VariantLabels } from 'framer-motion';
+import {
+  motion,
+  Transition,
+  AnimationControls,
+  Target,
+  TargetAndTransition,
+  VariantLabels,
+} from 'framer-motion';
 
 import { useDynamicFileImport } from '@utils';
 
-const noIcon = 'https://ik.imagekit.io/0ovzivqyfai/_personal/icon/no_icon_kaS78G4ne.svg?updatedAt=1701541464211';
+const noIcon =
+  'https://ik.imagekit.io/0ovzivqyfai/_personal/icon/no_icon_kaS78G4ne.svg?updatedAt=1701541464211';
 
 import { IGenericComponent, IGenericProps } from '@@types/generic-types';
 interface IComponentProps extends IGenericProps {

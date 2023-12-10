@@ -1,7 +1,8 @@
 @font-face {
   font-family: 'SF Distant Galaxy';
   src: url('@fonts/sf-distant-galaxy/SFDistantGalaxy.eot');
-  src: url('@fonts/sf-distant-galaxy/SFDistantGalaxy.eot?#iefix') format('embedded-opentype'),
+  src:
+    url('@fonts/sf-distant-galaxy/SFDistantGalaxy.eot?#iefix') format('embedded-opentype'),
     url('@fonts/sf-distant-galaxy/SFDistantGalaxy.woff2') format('woff2'),
     url('@fonts/sf-distant-galaxy/SFDistantGalaxy.woff') format('woff'),
     url('@fonts/sf-distant-galaxy/SFDistantGalaxy.ttf') format('truetype');
@@ -12,7 +13,8 @@
 @font-face {
   font-family: 'SF Distant Galaxy Outline';
   src: url('@fonts/sf-distant-galaxy/SFDistantGalaxyOutline-Italic.eot');
-  src: url('@fonts/sf-distant-galaxy/SFDistantGalaxyOutline-Italic.eot?#iefix')
+  src:
+    url('@fonts/sf-distant-galaxy/SFDistantGalaxyOutline-Italic.eot?#iefix')
       format('embedded-opentype'),
     url('@fonts/sf-distant-galaxy/SFDistantGalaxyOutline-Italic.woff2') format('woff2'),
     url('@fonts/sf-distant-galaxy/SFDistantGalaxyOutline-Italic.woff') format('woff'),
@@ -24,7 +26,8 @@
 @font-face {
   font-family: 'SF Distant Galaxy';
   src: url('@fonts/sf-distant-galaxy/SFDistantGalaxy-Italic.eot');
-  src: url('@fonts/sf-distant-galaxy/SFDistantGalaxy-Italic.eot?#iefix') format('embedded-opentype'),
+  src:
+    url('@fonts/sf-distant-galaxy/SFDistantGalaxy-Italic.eot?#iefix') format('embedded-opentype'),
     url('@fonts/sf-distant-galaxy/SFDistantGalaxy-Italic.woff2') format('woff2'),
     url('@fonts/sf-distant-galaxy/SFDistantGalaxy-Italic.woff') format('woff'),
     url('@fonts/sf-distant-galaxy/SFDistantGalaxy-Italic.ttf') format('truetype');
@@ -35,7 +38,8 @@
 @font-face {
   font-family: 'SF Distant Galaxy AltOutline';
   src: url('@fonts/sf-distant-galaxy/SFDistantGalaxyAltOutline-Italic.eot');
-  src: url('@fonts/sf-distant-galaxy/SFDistantGalaxyAltOutline-Italic.eot?#iefix')
+  src:
+    url('@fonts/sf-distant-galaxy/SFDistantGalaxyAltOutline-Italic.eot?#iefix')
       format('embedded-opentype'),
     url('@fonts/sf-distant-galaxy/SFDistantGalaxyAltOutline-Italic.woff2') format('woff2'),
     url('@fonts/sf-distant-galaxy/SFDistantGalaxyAltOutline-Italic.woff') format('woff'),
@@ -47,7 +51,8 @@
 @font-face {
   font-family: 'SF Distant Galaxy';
   src: url('@fonts/sf-distant-galaxy/SFDistantGalaxy_1.eot');
-  src: url('@fonts/sf-distant-galaxy/SFDistantGalaxy_1.eot?#iefix') format('embedded-opentype'),
+  src:
+    url('@fonts/sf-distant-galaxy/SFDistantGalaxy_1.eot?#iefix') format('embedded-opentype'),
     url('@fonts/sf-distant-galaxy/SFDistantGalaxy_1.woff2') format('woff2'),
     url('@fonts/sf-distant-galaxy/SFDistantGalaxy_1.woff') format('woff'),
     url('@fonts/sf-distant-galaxy/SFDistantGalaxy_1.ttf') format('truetype');
@@ -58,8 +63,8 @@
 @font-face {
   font-family: 'SF Distant Galaxy Alternate';
   src: url('@fonts/sf-distant-galaxy/SFDistantGalaxyAlternate.eot');
-  src: url('@fonts/sf-distant-galaxy/SFDistantGalaxyAlternate.eot?#iefix')
-      format('embedded-opentype'),
+  src:
+    url('@fonts/sf-distant-galaxy/SFDistantGalaxyAlternate.eot?#iefix') format('embedded-opentype'),
     url('@fonts/sf-distant-galaxy/SFDistantGalaxyAlternate.woff2') format('woff2'),
     url('@fonts/sf-distant-galaxy/SFDistantGalaxyAlternate.woff') format('woff'),
     url('@fonts/sf-distant-galaxy/SFDistantGalaxyAlternate.ttf') format('truetype');
@@ -70,7 +75,8 @@
 @font-face {
   font-family: 'SF Distant Galaxy Alternate';
   src: url('@fonts/sf-distant-galaxy/SFDistantGalaxyAlternate-Italic.eot');
-  src: url('@fonts/sf-distant-galaxy/SFDistantGalaxyAlternate-Italic.eot?#iefix')
+  src:
+    url('@fonts/sf-distant-galaxy/SFDistantGalaxyAlternate-Italic.eot?#iefix')
       format('embedded-opentype'),
     url('@fonts/sf-distant-galaxy/SFDistantGalaxyAlternate-Italic.woff2') format('woff2'),
     url('@fonts/sf-distant-galaxy/SFDistantGalaxyAlternate-Italic.woff') format('woff'),
@@ -82,8 +88,8 @@
 @font-face {
   font-family: 'SF Distant Galaxy AltOutline';
   src: url('@fonts/sf-distant-galaxy/SFDistantGalaxyAltOutline.eot');
-  src: url('@fonts/sf-distant-galaxy/SFDistantGalaxyAltOutline.eot?#iefix')
-      format('embedded-opentype'),
+  src:
+    url('@fonts/sf-distant-galaxy/SFDistantGalaxyAltOutline.eot?#iefix') format('embedded-opentype'),
     url('@fonts/sf-distant-galaxy/SFDistantGalaxyAltOutline.woff2') format('woff2'),
     url('@fonts/sf-distant-galaxy/SFDistantGalaxyAltOutline.woff') format('woff'),
     url('@fonts/sf-distant-galaxy/SFDistantGalaxyAltOutline.ttf') format('truetype');
@@ -94,7 +100,8 @@
 @font-face {
   font-family: 'SF Distant Galaxy Symbols';
   src: url('@fonts/sf-distant-galaxy/SFDistantGalaxySymbols-Italic.eot');
-  src: url('@fonts/sf-distant-galaxy/SFDistantGalaxySymbols-Italic.eot?#iefix')
+  src:
+    url('@fonts/sf-distant-galaxy/SFDistantGalaxySymbols-Italic.eot?#iefix')
       format('embedded-opentype'),
     url('@fonts/sf-distant-galaxy/SFDistantGalaxySymbols-Italic.woff2') format('woff2'),
     url('@fonts/sf-distant-galaxy/SFDistantGalaxySymbols-Italic.woff') format('woff'),
@@ -106,7 +113,8 @@
 @font-face {
   font-family: 'SF Distant Galaxy Symbols';
   src: url('@fonts/sf-distant-galaxy/SFDistantGalaxySymbols.eot');
-  src: url('@fonts/sf-distant-galaxy/SFDistantGalaxySymbols.eot?#iefix') format('embedded-opentype'),
+  src:
+    url('@fonts/sf-distant-galaxy/SFDistantGalaxySymbols.eot?#iefix') format('embedded-opentype'),
     url('@fonts/sf-distant-galaxy/SFDistantGalaxySymbols.woff2') format('woff2'),
     url('@fonts/sf-distant-galaxy/SFDistantGalaxySymbols.woff') format('woff'),
     url('@fonts/sf-distant-galaxy/SFDistantGalaxySymbols.ttf') format('truetype');
@@ -117,7 +125,8 @@
 @font-face {
   font-family: 'SF Distant Galaxy Outline';
   src: url('@fonts/sf-distant-galaxy/SFDistantGalaxyOutline.eot');
-  src: url('@fonts/sf-distant-galaxy/SFDistantGalaxyOutline.eot?#iefix') format('embedded-opentype'),
+  src:
+    url('@fonts/sf-distant-galaxy/SFDistantGalaxyOutline.eot?#iefix') format('embedded-opentype'),
     url('@fonts/sf-distant-galaxy/SFDistantGalaxyOutline.woff2') format('woff2'),
     url('@fonts/sf-distant-galaxy/SFDistantGalaxyOutline.woff') format('woff'),
     url('@fonts/sf-distant-galaxy/SFDistantGalaxyOutline.ttf') format('truetype');
@@ -127,7 +136,8 @@
 
 @font-face {
   font-family: 'EPISODE I';
-  src: url('@fonts/episode-one/EPISODEI.woff2') format('woff2'),
+  src:
+    url('@fonts/episode-one/EPISODEI.woff2') format('woff2'),
     url('@fonts/episode-one/EPISODEI.woff') format('woff');
   font-weight: normal;
   font-style: normal;
@@ -137,7 +147,8 @@
 @font-face {
   font-family: 'Aurek-Besh Narrow';
   src: url('@fonts/aurek-besh/Aurek-BeshNarrow.eot');
-  src: url('@fonts/aurek-besh/Aurek-BeshNarrow.eot?#iefix') format('embedded-opentype'),
+  src:
+    url('@fonts/aurek-besh/Aurek-BeshNarrow.eot?#iefix') format('embedded-opentype'),
     url('@fonts/aurek-besh/Aurek-BeshNarrow.woff2') format('woff2'),
     url('@fonts/aurek-besh/Aurek-BeshNarrow.woff') format('woff'),
     url('@fonts/aurek-besh/Aurek-BeshNarrow.ttf') format('truetype');
@@ -148,7 +159,8 @@
 @font-face {
   font-family: 'Aurek-Besh';
   src: url('@fonts/aurek-besh/Aurek-Besh.eot');
-  src: url('@fonts/aurek-besh/Aurek-Besh.eot?#iefix') format('embedded-opentype'),
+  src:
+    url('@fonts/aurek-besh/Aurek-Besh.eot?#iefix') format('embedded-opentype'),
     url('@fonts/aurek-besh/Aurek-Besh.woff2') format('woff2'),
     url('@fonts/aurek-besh/Aurek-Besh.woff') format('woff'),
     url('@fonts/aurek-besh/Aurek-Besh.ttf') format('truetype');
@@ -159,7 +171,8 @@
 @font-face {
   font-family: 'TIE-Wing';
   src: url('@fonts/tie-wing/TIEWing.eot');
-  src: url('@fonts/tie-wing/TIEWing.eot?#iefix') format('embedded-opentype'),
+  src:
+    url('@fonts/tie-wing/TIEWing.eot?#iefix') format('embedded-opentype'),
     url('@fonts/tie-wing/TIEWing.woff2') format('woff2'),
     url('@fonts/tie-wing/TIEWing.woff') format('woff'),
     url('@fonts/tie-wing/TIEWing.ttf') format('truetype');

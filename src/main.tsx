@@ -3,7 +3,7 @@ import ReactDOM from 'react-dom/client';
 import App from './App.tsx';
 
 import '@css/tailwind.css';
-import '@utils/ts/className';
+import '@utils/ts/prototype';
 
 ReactDOM.createRoot(document.getElementById('root')!).render(
   <React.StrictMode>
