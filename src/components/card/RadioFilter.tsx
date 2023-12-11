@@ -1,4 +1,4 @@
-import { useRef } from 'react';
+import React, { useRef } from 'react';
 import Shape from '@components/graphic/Shape';
 
 import { IGenericComponent, IGenericProps } from '@@types/generic-types';

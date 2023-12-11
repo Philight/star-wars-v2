@@ -9,7 +9,7 @@ export interface IData {
   vehicles: TGenericObject[];
 }
 
-export interface IState {
+export interface IDataState {
   data: IData;
   totalCount: number;
   currentPage: number;
@@ -17,7 +17,7 @@ export interface IState {
   error?: unknown;
 }
 
-export const initialState: IState = {
+export const dataInitialState: IDataState = {
   data: {},
   totalCount: null,
   currentPage: 1,

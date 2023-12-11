@@ -2,36 +2,10 @@ import React, { useState, useEffect, useReducer, useRef, useContext, useMemo } f
 
 import { useDataContext } from '@contexts/DataContext';
 import { Icon, Shape } from '@components/graphic';
-// import Background from '@components/layout/Background';
-
 import { RangeFilter, SelectFilter, RadioFilter } from '@components/card';
+// import Background from '@components/layout/Background';
+import { filterReducer } from '@data';
 import { arrayUniqueValues } from '@utils';
-
-const filtersReducer = (state, action) => {
-  const newState = { ...state };
-  switch (action.type) {
-    case 'initialize':
-      return action.data;
-    case 'reset':
-      for (const attribute in newState) {
-        if (attribute in newState) {
-          for (const value in newState[attribute]) {
-            if (value in newState[attribute]) {
-              newState[attribute][value].active = true;
-            }
-          }
-        }
-      }
-      return newState;
-    case 'update':
-      newState[action.column] = action.data;
-      return newState;
-
-    default:
-      break;
-  }
-  return newState;
-};
 
 import { IGenericComponent, IGenericProps } from '@@types/generic-types';
 interface IComponentProps extends IGenericProps {
@@ -45,17 +19,74 @@ export const Filters = (props: IComponentProps): IGenericComponent => {
 
   const [isVisible, setIsVisible] = useState(false);
 
+  const [state, dispatch] = useReducer(filterReducer, null);
+
   const context = useDataContext();
-  //  const [state, dispatch] = useReducer(filtersReducer, null);
   const avatarsData = context.data?.avatars ?? [];
   const resetFlag = useRef(0);
   const isReset = useRef(false);
 
+  const getInitialFilters = (): { [key: string]: unknown } => {
+    const newFilterTree = {};
+
+    if (!avatarsData.length) {
+      return newFilterTree;
+    }
+
+    for (const col of columns) {
+      const columnName = col.name;
+
+      // Set initial values array
+      if (!(columnName in newFilterTree)) {
+        newFilterTree[columnName] = {};
+      }
+
+      // Get filter values from External objects
+      if (['films', 'vehicles', 'starships'].includes(columnName)) {
+        for (const instance of context.data[columnName]) {
+          const name = instance?.name || instance?.title;
+          const id = instance.url.split(`/${columnName}/`)[1].split('/')[0];
+          if (!(name in newFilterTree[columnName])) {
+            newFilterTree[columnName][id] = {
+              label: name,
+              active: true,
+            };
+          }
+        }
+
+        // Get filter values from Character attributes
+      } else {
+        const values =
+          avatarsData && arrayUniqueValues(avatarsData.map(avatar => avatar[columnName])).sortAsc();
+        for (const value of values) {
+          if (!(value in newFilterTree[columnName])) {
+            newFilterTree[columnName][value] = {
+              label: value,
+              active: true,
+            };
+          }
+        }
+      }
+    }
+    dispatch({
+      type: 'INITIALIZE',
+      payload: {
+        data: newFilterTree,
+      },
+    });
+    isReset.current = true;
+  };
+
+  const initialFilters = useMemo(() => getInitialFilters(), [avatarsData]);
+
+  /*
   // Get initial Filters from fetched data
   const getInitialFilters = (): { [key: string]: string[] | number[] } => {
     const initialFilters = {};
 
-    if (!avatarsData.length) return initialFilters;
+    if (!avatarsData.length) {
+      return initialFilters;
+    }
 
     for (const col of columns) {
       const columnName = col.name;
@@ -65,11 +96,11 @@ export const Filters = (props: IComponentProps): IGenericComponent => {
         initialFilters[columnName] = [];
       }
 
-      // Get filter values from External instances
+      // Get filter values from External objects
       if (['films', 'vehicles', 'starships'].includes(columnName)) {
         const ids = [];
         for (const instance of context.data[columnName]) {
-          //          const name = instance?.name || instance?.title;
+          const name = instance?.name || instance?.title;
           const id = instance.url.split(`/${columnName}/`)[1].split('/')[0];
           ids.push(id);
         }
@@ -85,73 +116,31 @@ export const Filters = (props: IComponentProps): IGenericComponent => {
     if (updateActiveFilters) {
       updateActiveFilters(initialFilters);
     }
-console.log('Filters | initialFilters', initialFilters);    
+    console.log('Filters | initialFilters', initialFilters);
     return initialFilters;
   };
 
-  const allFilters = useMemo(() => getInitialFilters(), [avatarsData]);
+//  const allFilters = useMemo(() => getInitialFilters(), [avatarsData]);
 
-  const updateFilter = (columnName, updatedValues) => {
+  const updateFilter = (columnName, updatedValues): void => {
     if (updateActiveFilters) {
       const newFilters = {
         ...activeFilters,
-        [columnName]: updatedValues,
+        [columnName]: updatedValues.sortAsc(),
       };
       updateActiveFilters(newFilters);
     }
   };
+*/
 
-  const toggleFilter = () => () => {
-    setIsVisible(prevState => !prevState);
-  };
-
-  /*
-  useEffect(() => {
-    const newFilterTree = {};
-    for (const col of columns) {
-      const columnName = col.name;
-
-      if (!(columnName in newFilterTree)) {
-        newFilterTree[columnName] = {};
-      }
-
-      if (['films', 'vehicles', 'starships'].includes(columnName)) {
-        for (const instance of context.data[columnName]) {
-          const name = instance?.name || instance?.title;
-          const instanceId = instance.url.split(`/${columnName}/`)[1].split('/')[0];
-          if (!(name in newFilterTree[columnName])) {
-            newFilterTree[columnName][instanceId] = {
-              label: name,
-              active: true,
-            };
-          }
-        }
-      } else {
-        for (const character of data) {
-          const value = character[columnName];
-          if (!(value in newFilterTree[columnName])) {
-            newFilterTree[columnName][value] = {
-              label: value,
-              active: true,
-            };
-          }
-        }
-      }
-    }
+  const updateFilter = (columnName: string, updatedValues: { [key: string]: unknown }): void => {
     dispatch({
-      type: 'initialize',
-      data: newFilterTree,
+      type: 'UPDATE_COLUMN',
+      payload: {
+        column: columnName,
+        data: updatedValues,
+      },
     });
-    isReset.current = true;
-  }, []);
-
-
-  const toggleFilter = () => () => {
-    setIsVisible(prevState => !prevState);
-  };
-
-  const updateFilter = (columnName, updatedValues) => {
-    dispatch({ type: 'update', column: columnName, data: updatedValues });
     if (isReset.current) {
       isReset.current = false;
     }
@@ -159,14 +148,23 @@ console.log('Filters | initialFilters', initialFilters);
 
   const resetFilter = () => event => {
     event.preventDefault();
-    dispatch({ type: 'reset' });
+    dispatch({
+      type: 'RESET',
+      payload: {
+        data: initialFilters,
+      },
+    });
     resetFlag.current = resetFlag.current + 1;
     isReset.current = true;
   };
 
+  const toggleFilter = () => () => {
+    setIsVisible(prevState => !prevState);
+  };
+
   const applyFilter = () => event => {
     event.preventDefault();
-
+    /*
     const filteredData = data.filter(item => {
       for (const attribute in state) {
         if (attribute in state) {
@@ -185,101 +183,110 @@ console.log('Filters | initialFilters', initialFilters);
       }
       return true;
     });
+*/
+    const updatedFilters = {};
+    for (const attribute in state) {
+      if (attribute in state) {
+        updatedFilters[attribute] = [];
+        for (const value in state[attribute]) {
+          if (value.active === true) {
+            updatedFilters[attribute].push(attribute);
+          }
+        }
+      }
+    }
 
-    updateFilteredData(filteredData);
+    updateActiveFilters(updatedFilters);
+    //    updateFilteredData(filteredData);
     toggleFilter()();
   };
-*/
-  return (
-    <div
-      className={`
-			filter__c ${className} ${isVisible ? 'visible' : 'hidden'}
-		`}
-    >
-      <Icon className={`filter__toggle`} icon="filter" onClick={toggleFilter()} />
 
-      <dialog className={`filter__modal full-screen`}>
+  return (
+    <div className={[`filters__c`, isVisible ? 'open' : 'closed', className].css()}>
+      <Icon className={`filters__toggle`} icon="filter" onClick={toggleFilter()} />
+
+      <dialog className={`filters__modal full-screen`}>
         {/*
         <Background className={`filter__modal-drop-shadow`} />
 */}
-        <div className={`filter__modal-content fill-parent`}>
-          <div className={`filter__modal-inner fill-parent flex-col`}>
-            <div className={`filter__modal-top flex-center-v`}>
-              <h4 className={`btn-text-lg`}>Filters</h4>
-              <Icon
-                className={`filter__modal-close`}
-                icon="star-wars-x-mark"
-                onClick={toggleFilter()}
-              />
-            </div>
+        <div className={`filters__modal-inner fill-parent f-col`}>
+          <div className={`filters__modal-header f-center-y`}>
+            <h3>Filters</h3>
+            <Icon
+              className={`filters__modal-close`}
+              icon="star-wars-x-mark"
+              onClick={toggleFilter()}
+            />
+          </div>
 
-            <div className={`filter__modal-filters flex-col`}>
-              {columns.map(dataColumn => (
-                <div
+          <div className={`filters__modal-filters f-col`}>
+            {columns.map(dataColumn =>
+              dataColumn.type === 'range' ? (
+                <RangeFilter
                   key={`${dataColumn.name}-${dataColumn.type}`}
-                  className={`filter__modal-filter ${dataColumn.type} flex-col`}
-                >
-                  <h5 className={`filter__modal-filter-heading btn-text-sm`}>
-                    {dataColumn.name.replace('_', ' ')}
-                  </h5>
+                  className={`filters__modal-filter--range`}
+                  label={dataColumn.name.replace('_', ' ')}
+                  values={!!state && state[dataColumn.name]}
+                  updateValues={updatedValues => updateFilter(dataColumn.name, updatedValues)}
+                  //                    activeValues={activeFilters?.[dataColumn.name]}
+                  //                    updateActiveValues={newValues => updateFilter(dataColumn.name, newValues)}
+                  resetFlag={resetFlag.current}
+                />
+              ) : (
+                dataColumn.type === 'select' && (
+                  <SelectFilter
+                    key={`${dataColumn.name}-${dataColumn.type}`}
+                    className={`filter__modal-filter--select`}
+                    label={dataColumn.name.replace('_', ' ')}
+                    values={!!state && state[dataColumn.name]}
+                    updateValues={updatedValues => updateFilter(dataColumn.name, updatedValues)}
+                  />
+                )
+              ),
+            )}
 
-                  {dataColumn.type === 'range' && (
-                    <RangeFilter
-                      className={`filter__modal-filter--range`}
-                      //                      allFilters={allFilters}
-                      //                      activeFilters={activeFilters}
-                      allValues={allFilters?.[dataColumn.name]}
-                      activeValues={activeFilters?.[dataColumn.name]}
-                      updateActiveValues={newValues => updateFilter(dataColumn.name, newValues)}
-                      //                      resetFlag={resetFlag.current}
-                    />
-                  )}
-
-                  {/*
-                    dataColumn.type === 'range' ? (
-                    <RangeFilter
-                      className={`filter__modal-filter--slider`}
+            {/*
+                  dataColumn.type === 'range' ? (
+                  <RangeFilter
+                    className={`filter__modal-filter--slider`}
+                    values={!!state && state[dataColumn.name]}
+                    updateFilter={updatedValues => updateFilter(dataColumn.name, updatedValues)}
+                    resetFlag={resetFlag.current}
+                  />
+                ) : dataColumn.type === 'select' ? (
+                  <SelectFilter
+                    className={`filter__modal-filter--select`}
+                    values={!!state && state[dataColumn.name]}
+                    updateFilter={updatedValues => updateFilter(dataColumn.name, updatedValues)}
+                  />
+                ) : (
+                  dataColumn.type === 'radio' && (
+                    <RadioFilter
+                      className={`filter__modal-filter--radio`}
                       values={!!state && state[dataColumn.name]}
                       updateFilter={updatedValues => updateFilter(dataColumn.name, updatedValues)}
-                      resetFlag={resetFlag.current}
                     />
-                  ) : dataColumn.type === 'select' ? (
-                    <SelectFilter
-                      className={`filter__modal-filter--select`}
-                      values={!!state && state[dataColumn.name]}
-                      updateFilter={updatedValues => updateFilter(dataColumn.name, updatedValues)}
-                    />
-                  ) : (
-                    dataColumn.type === 'radio' && (
-                      <RadioFilter
-                        className={`filter__modal-filter--radio`}
-                        values={!!state && state[dataColumn.name]}
-                        updateFilter={updatedValues => updateFilter(dataColumn.name, updatedValues)}
-                      />
-                    )
                   )
-                */}
-                </div>
-              ))}
-            </div>
+                )
+*/}
+          </div>
 
-            <div className={`filter__modal-actions flex-center-v`}>
-              <button
-                className={`filter__modal-button btn-text-lg flex-center`}
-                //                onClick={resetFilter()}
-                //                disabled={isReset.current}
-              >
-                Reset
-                <Shape className={`polygon`} />
-              </button>
-              <button
-                className={`filter__modal-button btn-text-lg flex-center`}
-                //                onClick={applyFilter()}
-              >
-                Apply
-                <Shape className={`polygon`} />
-              </button>
-            </div>
+          <div className={`filter__modal-actions flex-center-v`}>
+            <button
+              className={`filter__modal-button btn-text-lg flex-center`}
+              //                onClick={resetFilter()}
+              //                disabled={isReset.current}
+            >
+              Reset
+              <Shape className={`polygon`} />
+            </button>
+            <button
+              className={`filter__modal-button btn-text-lg flex-center`}
+              //                onClick={applyFilter()}
+            >
+              Apply
+              <Shape className={`polygon`} />
+            </button>
           </div>
         </div>
       </dialog>

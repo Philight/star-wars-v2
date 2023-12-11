@@ -10,6 +10,8 @@ const SliderThumb = ({ position, index, updateIndex, step }): IGenericComponent 
   const [isDragging, setIsDragging] = useState(false);
   const dragStart = useRef(null);
 
+  const MIN_DISTANCE = 50;
+
   useEffect(() => {
     if (isDragging) {
       setTimeout(() => {
@@ -32,6 +34,10 @@ const SliderThumb = ({ position, index, updateIndex, step }): IGenericComponent 
     }
 
     const coefficient = distance < 0 ? -1 : 1;
+
+    if (distance * coefficient < MIN_DISTANCE) {
+      return;
+    }
 
     if (!isDragging) {
       setIsDragging(true);
@@ -69,35 +75,28 @@ interface IComponentProps extends IGenericProps {
 }
 
 export const RangeFilter = (props: IComponentProps): IGenericComponent => {
-  const { className, allValues, activeValues, updateActiveValues, resetFlag } = props;
+  const { className, label, values, updateValues, resetFlag } = props;
 
   const [leftIndex, setLeftIndex] = useState(0);
   const [rightIndex, setRightIndex] = useState(0);
 
   //  const containerRef = useRef(null);
+  const filterKeys = Object.keys(values) ?? [];
 
-  const filterValues =
-    !!activeValues &&
-    Object.keys(activeValues).sort((a, b) => {
-      return a - b;
-    });
-
-  // percentage
-  const step = 100 / (filterValues?.length - 1);
+  // Percentage
+  const step = 100 / (filterKeys?.length - 1);
 
   useEffect(() => {
-    /*
-    if (!!updateFilter && activeValues) {
-      for (let i = 0; i < filterValues.length; i++) {
-        activeValues[filterValues[i]].active =
-          i >= leftIndex && i <= filterValues.length - 1 - rightIndex;
-      }
-      updateFilter(activeValues);
-    }
-*/
+    console.log('filterKeys', filterKeys);
+    console.log('leftIndex, ', leftIndex);
+    console.log('rightIndex, ', rightIndex);
 
-    for (let i = 0; i < filterValues.length; i++) {
-      //    updateActiveValues
+    if (!!updateValues && filterKeys) {
+      const newValues = { ...values };
+      for (let i = 0; i < filterKeys.length; i++) {
+        newValues[filterKeys[i]].active = i >= leftIndex && i <= filterKeys.length - 1 - rightIndex;
+      }
+      updateValues(newValues);
     }
   }, [leftIndex, rightIndex]);
 
@@ -113,8 +112,8 @@ export const RangeFilter = (props: IComponentProps): IGenericComponent => {
         if (!isIncrement && prevIndex === 0) {
           return 0;
         }
-        if (isIncrement && prevIndex === filterValues?.length - 2 - rightIndex) {
-          return filterValues?.length - 2 - rightIndex;
+        if (isIncrement && prevIndex === filterKeys?.length - 2 - rightIndex) {
+          return filterKeys?.length - 2 - rightIndex;
         }
         return prevIndex + coefficient;
       });
@@ -125,8 +124,8 @@ export const RangeFilter = (props: IComponentProps): IGenericComponent => {
           return 0;
         }
         // move LEFT
-        if (!isIncrement && prevIndex === filterValues?.length - 2 - leftIndex) {
-          return filterValues?.length - 2 - leftIndex;
+        if (!isIncrement && prevIndex === filterKeys?.length - 2 - leftIndex) {
+          return filterKeys?.length - 2 - leftIndex;
         }
         return prevIndex + -1 * coefficient;
       });
@@ -135,20 +134,23 @@ export const RangeFilter = (props: IComponentProps): IGenericComponent => {
 
   return (
     <div
-      className={`range-slider__c f-center-y ${className}`}
+      className={[`filter__c range f-col`, className].css()}
       //    ref={containerRef}
     >
-      <div className={`range-slider__values body-text`}>
-        <label>
-          {filterValues[leftIndex]} - {filterValues[filterValues?.length - 1 - rightIndex]}
-        </label>
+      {!!label && <label>{label}</label>}
+      <div className={`range-slider__slider f-center-y`}>
+        <div className={`range-slider__values`}>
+          <label>
+            {filterKeys[leftIndex]} - {filterKeys[filterKeys?.length - 1 - rightIndex]}
+          </label>
+        </div>
+        <Shape className={`range-slider__track light-saber`} />
+        <Shape className={`range-slider__path light-saber`} />
+
+        <SliderThumb position="left" index={leftIndex} updateIndex={updateIndex} step={step} />
+
+        <SliderThumb position="right" index={rightIndex} updateIndex={updateIndex} step={step} />
       </div>
-      <Shape className={`range-slider__track light-saber`} />
-      <Shape className={`range-slider__path light-saber`} />
-
-      <SliderThumb position="left" index={leftIndex} updateIndex={updateIndex} step={step} />
-
-      <SliderThumb position="right" index={rightIndex} updateIndex={updateIndex} step={step} />
     </div>
   );
 };

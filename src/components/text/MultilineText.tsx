@@ -2,14 +2,14 @@ import React from 'react';
 
 import { IGenericComponent, IGenericProps } from '@@types/generic-types';
 interface IComponentProps extends IGenericProps {
-  data: { [key: string]: unknown };
-  onClick?: React.MouseEvent<HTMLButtonElement, MouseEvent>;
+  input: string;
+  lines: number;
 }
 
 export const MultilineText = (props: IComponentProps): IGenericComponent => {
-  const { className, input, lines } = props;
+  const { className, input, lines = 1 } = props;
 
-  const parseText = text => {
+  const parseText = (text: string): string => {
     const splittedText = !!text && text.split(' ');
     const wordsLength = splittedText.length;
     if (wordsLength < 2) {
@@ -33,9 +33,9 @@ export const MultilineText = (props: IComponentProps): IGenericComponent => {
   };
 
   return (
-    <span className={`multilinetext__c ${className}`}>
+    <span className={[`multilinetext__c f-col`, className].css()}>
       {parseText(input).map((textLine, index) => (
-        <span key={`mlt-${index}`} className={`multilinetext__line`}>
+        <span key={`mlt-${index}`} className={`multilinetext__line text-nowrap`}>
           {textLine}
         </span>
       ))}

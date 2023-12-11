@@ -151,8 +151,8 @@ export const CardsList = (props: IComponentProps): IGenericComponent => {
   }, [currentPage]);
 
   useEffect(() => {
-    //    setCurrentPage(1);
-  }, [searchValue]);
+    console.log('cardslist activefilters', activeFilters);
+  }, [activeFilters]);
 
   const goToDetails = cardUrl => (): void => {
     const cardId = cardUrl.split('/people/')[1].split('/')[0];
@@ -178,7 +178,7 @@ export const CardsList = (props: IComponentProps): IGenericComponent => {
         columns={FILTER_COLUMNS}
         data={avatarsData}
         //        updateFilteredData={setFilteredData}
-        activefilters={activeFilters}
+        activeFilters={activeFilters}
         updateActiveFilters={setActiveFilters}
       />
 

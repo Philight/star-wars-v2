@@ -1,5 +1,5 @@
 import React, { PropsWithChildren, useReducer, createContext, useContext } from 'react';
-import { initialState, IData, IState, dataReducer } from '@data';
+import { dataInitialState, IData, IDataState, dataReducer } from '@data';
 
 export const DataContext = createContext();
 
@@ -11,7 +11,7 @@ interface IContextType extends IState {
 }
 
 export const DataProvider = ({ children }: PropsWithChildren<T>): React.FC<React.ReactNode> => {
-  const [state, dispatch] = useReducer(dataReducer, initialState);
+  const [state, dispatch] = useReducer(dataReducer, dataInitialState);
 
   const setLoading = (loading: boolean): void => {
     dispatch({

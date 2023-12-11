@@ -1,5 +1,6 @@
 import React, { useRef } from 'react';
 import { motion } from 'framer-motion';
+import { Button } from '@components/action';
 import { Shape } from '@components/graphic';
 import { MultilineText } from '@components/text/MultilineText';
 
@@ -10,38 +11,38 @@ interface IComponentProps extends IGenericProps {
 }
 
 export const SelectFilter = (props: IComponentProps): IGenericComponent => {
-  const { className, values, updateFilter } = props;
+  const { className, label, values, updateValues } = props;
 
   const containerRef = useRef(null);
-  const filterKeys = !!values && Object.keys(values);
+  const filterKeys = Object.keys(values) ?? [];
 
   const toggleValue = key => () => {
     const updatedValues = values;
     updatedValues[key].active = !updatedValues[key].active;
-    updateFilter(updatedValues);
+    updateValues(updatedValues);
   };
 
   return (
-    <div className={`select-filter__c flex-center-v ${className}`} ref={containerRef}>
+    <div className={[`filter__c select f-col`, className].css()} ref={containerRef}>
+      {!!label && <label>{label}</label>}
       <motion.div
-        className={`select-filter__slider flex-center-v`}
+        className={`select-filter__slider f-center-y`}
         drag="x"
         dragConstraints={containerRef}
         dragElastic={1}
       >
-        {!!filterKeys &&
-          filterKeys.map(key => (
-            <div
-              className={`select-filter__value flex-center ${values[key].active && 'active'}`}
-              key={key}
-              onClick={toggleValue(key)}
-            >
-              <Shape className={`polygon`} />
-              <span className={`select-filter__value-name flex-center btn-text-sm`}>
-                <MultilineText input={values[key].label} lines={2} />
-              </span>
-            </div>
-          ))}
+        {filterKeys.map(key => (
+          <Button
+            key={key}
+            className={[`select-filter__value f-center`, values[key].active && 'active'].css()}
+            type="outline"
+            size="lg"
+            role="button"
+            onClick={toggleValue(key)}
+          >
+            <MultilineText input={values[key].label} lines={2} />
+          </Button>
+        ))}
       </motion.div>
     </div>
   );
