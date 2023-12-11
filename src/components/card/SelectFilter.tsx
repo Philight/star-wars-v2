@@ -1,7 +1,6 @@
 import React, { useRef } from 'react';
 import { motion } from 'framer-motion';
 import { Button } from '@components/action';
-import { Shape } from '@components/graphic';
 import { MultilineText } from '@components/text/MultilineText';
 
 import { IGenericComponent, IGenericProps } from '@@types/generic-types';
@@ -23,7 +22,7 @@ export const SelectFilter = (props: IComponentProps): IGenericComponent => {
   };
 
   return (
-    <div className={[`filter__c select f-col`, className].css()} ref={containerRef}>
+    <div className={[`filter__c select`, className].css()} ref={containerRef}>
       {!!label && <label>{label}</label>}
       <motion.div
         className={`select-filter__slider f-center-y`}

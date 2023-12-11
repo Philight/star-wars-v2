@@ -93,6 +93,7 @@ export const CardsList = (props: IComponentProps): IGenericComponent => {
   const setTotalCount = context.setTotalCount;
   const setLoading = context.setLoading;
   const setError = context.setError;
+  const setCurrentPage = context.setCurrentPage;
 
   //  const [ filteredData, setFilteredData ] = useState(DATA_AVATARS);
   const [activeFilters, setActiveFilters] = useState({});
@@ -132,8 +133,10 @@ export const CardsList = (props: IComponentProps): IGenericComponent => {
         const id = ship.split('/starships/')[1].split('/')[0];
         fetches.push(getObject('starships', id));
       }
-      Promise.all(fetches).then(results => {
-        console.log('CardsList', results);
+      Promise.all(fetches).then(response => {
+        console.log('CardsList', response);
+        // Filter out failed fetches
+        const results = response.filter(res => !(res instanceof Error));
         setData({
           avatars: avatars.results,
           planets: results.filter(res => res.url.includes('planets')),
@@ -151,7 +154,7 @@ export const CardsList = (props: IComponentProps): IGenericComponent => {
   }, [currentPage]);
 
   useEffect(() => {
-    console.log('cardslist activefilters', activeFilters);
+    console.log('CardsList | activeFilters', activeFilters);
   }, [activeFilters]);
 
   const goToDetails = cardUrl => (): void => {
@@ -159,10 +162,35 @@ export const CardsList = (props: IComponentProps): IGenericComponent => {
     navigate(`/detail/character/${cardId}`);
   };
 
-  const filterData = data => {
-    return data?.filter(elem => {
-      return elem.name?.toLowerCase().includes(searchValue?.toLowerCase() ?? '');
-    });
+  const filterData = (data: unknown[]): unknown[] => {
+    let filtered = [...data];
+    filtered = filtered?.filter(
+      elem => elem.name?.toLowerCase().includes(searchValue?.toLowerCase() ?? ''),
+    );
+
+    for (const attribute in activeFilters) {
+      if (attribute in activeFilters) {
+        filtered = filtered.filter(elem => {
+          console.log('elem', elem);
+          console.log('activeFilters[attribute]', activeFilters[attribute]);
+          console.log('elem[attribute]', elem[attribute]);
+          if (['films', 'species', 'vehicles', 'starships'].includes(attribute)) {
+            if (!elem[attribute].length) {
+              return true;
+            }
+            // Get Ids
+            const ids = elem[attribute].map(url => url.split(`/${attribute}/`)[1].split('/')[0]);
+            return ids.some(id => activeFilters[attribute].includes(id));
+          } else if (['homeworld'].includes(attribute)) {
+            const id = elem.homeworld.split(`/planets/`)[1].split('/')[0];
+            return activeFilters[attribute].includes(id);
+          }
+          console.log('filters include value', activeFilters[attribute].includes(elem[attribute]));
+          return activeFilters[attribute].includes(elem[attribute]);
+        });
+      }
+    }
+    return filtered;
   };
 
   if (loading) {
@@ -171,13 +199,10 @@ export const CardsList = (props: IComponentProps): IGenericComponent => {
 
   return (
     <div className={[`cards-list__c f-col f-grid rows-${rows} cols-${cols}`, className].css()}>
-      {/*
-       */}
       <Filters
         className={`cards-list__filters`}
         columns={FILTER_COLUMNS}
         data={avatarsData}
-        //        updateFilteredData={setFilteredData}
         activeFilters={activeFilters}
         updateActiveFilters={setActiveFilters}
       />
@@ -200,15 +225,11 @@ export const CardsList = (props: IComponentProps): IGenericComponent => {
         ))}
       </div>
 
-      {/*
-
       <CardsPagination
         currentPage={currentPage}
         setCurrentPage={setCurrentPage}
-        cardsArrLength={Math.round(filteredData.length / COUNT_PER_PAGE)}
+        cardsArrLength={Math.round(avatarsData.length)}
       />
-
-      */}
     </div>
   );
 };

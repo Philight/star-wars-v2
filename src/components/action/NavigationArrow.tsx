@@ -21,10 +21,12 @@ export const NavigationArrow = (props: IComponentProps): IGenericComponent => {
 
   const navigate = useNavigate();
 
-  const goToPage = (path: string) => event => {
-    event.preventDefault();
-    navigate(path);
-  };
+  const goToPage =
+    (path: string) =>
+    (event): void => {
+      event.preventDefault();
+      navigate(path);
+    };
 
   return (
     <motion.a

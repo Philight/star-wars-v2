@@ -13,7 +13,6 @@ export const getPaginatedData = async (objects, page): Promise<ResponseType> => 
     const response = await fetchData({
       method: 'GET',
       url: API_URL,
-      //      data: reqBody,
     });
     // eslint-disable-next-line no-console
     console.log('getPaginatedData response', response);
@@ -30,7 +29,10 @@ export const getObject = async (object, id): Promise<ResponseType> => {
     const response = await fetchData({
       method: 'GET',
       url: API_URL,
-      //      data: reqBody,
+      headers: {
+        //        "Access-Control-Allow-Origin": "https://swapi.dev/"
+        //        "Access-Control-Allow-Origin": "*"
+      },
     });
     // eslint-disable-next-line no-console
     console.log('getObject response', response);

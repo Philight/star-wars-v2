@@ -39,7 +39,7 @@ const ROUTE_TO_PAGE = {
   },
   AVATARS: {
     '/avatars': 'AvatarsPage',
-    '/detail/character/:id': 'AvatarsPage',
+    '/detail/character/:id': 'DetailsPage',
   },
 };
 

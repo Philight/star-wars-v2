@@ -1,18 +1,39 @@
-import Icon from '@components/graphic/Icon';
-import Shape from '@components/graphic/Shape';
+import React, { Icon, Shape } from '@components/graphic';
 
-export const CardsPagination = props => {
+import { IGenericComponent, IGenericProps } from '@@types/generic-types';
+
+const PaginationArrow = ({ className, onClick, direction }): IGenericComponent => {
+  const isNext = direction === 'NEXT' ? true : false;
+
+  return (
+    <div
+      className={[
+        `cards-pagination__control f-center arrow`,
+        isNext ? 'next' : 'prev',
+        className,
+      ].css()}
+      onClick={onClick}
+    >
+      <Icon icon={`chevron-${isNext ? 'right' : 'left'}`} />
+      <Shape className={`polygon`} />
+    </div>
+  );
+};
+
+interface IComponentProps extends IGenericProps {}
+
+export const CardsPagination = (props: IComponentProps): IGenericComponent => {
   const { className, showResults, currentPage, setCurrentPage, cardsArrLength } = props;
 
-  const handlePagination = MODE => () => {
+  const handlePagination = (MODE: string) => (): void => {
     if (MODE === 'PREV' && currentPage > 1) {
-      setCurrentPage(prevPage => prevPage - 1);
+      setCurrentPage(currentPage - 1);
     } else if (MODE === 'NEXT' && currentPage < cardsArrLength) {
-      setCurrentPage(prevPage => prevPage + 1);
+      setCurrentPage(currentPage + 1);
     }
   };
 
-  const calculateTranslate = () => {
+  const calculateTranslate = (): string => {
     let multiplier = 0;
 
     if (currentPage === 1) {
@@ -36,22 +57,28 @@ export const CardsPagination = props => {
 
   return (
     <div
-      className={`
-			cards-pagination__c flex-center-v ${className} 
-			${showResults ? 'show-results' : ''}
-		`}
+      className={[
+        `cards-pagination__c f-center-y`,
+        className,
+        showResults ? 'show-results' : '',
+      ].css()}
     >
+      {/*
       <div
-        className={`cards-pagination__control flex-center arrow prev ${
-          currentPage === 1 && 'disabled'
-        } `}
+        className={[`cards-pagination__control f-center arrow prev`,currentPage === 1 && 'disabled'].css()}
         onClick={handlePagination('PREV')}
       >
         <Icon icon="chevron-left" className={``} />
         <Shape className={`polygon`} />
       </div>
+*/}
+      <PaginationArrow
+        className={[currentPage === 1 && 'disabled'].css()}
+        direction="PREV"
+        onClick={handlePagination('PREV')}
+      />
 
-      <div className={`cards-pagination__control__indexes flex-center-v`}>
+      <div className={`cards-pagination__control__indexes f-center-y`}>
         <span
           className={`cards-pagination__control selection`}
           style={{ transform: calculateTranslate() }}
@@ -68,18 +95,21 @@ export const CardsPagination = props => {
             <>
               {pageIndex === cardsArrLength && (
                 <span
-                  className={`cards-pagination__control index placeholder ${
-                    currentPage <= cardsArrLength - 3 && 'visible'
-                  } flex-center`}
+                  className={[
+                    `cards-pagination__control index placeholder f-center`,
+                    currentPage <= cardsArrLength - 3 && 'visible',
+                  ].css()}
                 >
                   ...
                 </span>
               )}
 
               <span
-                className={`cards-pagination__control  index flex-center
-								${currentPage === pageIndex && 'selected'} ${paginationConditions && 'visible'}
-							`}
+                className={[
+                  `cards-pagination__control index f-center`,
+                  currentPage === pageIndex && 'selected',
+                  paginationConditions && 'visible',
+                ].css()}
               >
                 {pageIndex}
                 <Shape className={`polygon`} />
@@ -87,9 +117,10 @@ export const CardsPagination = props => {
 
               {pageIndex === 1 && (
                 <span
-                  className={`cards-pagination__control index placeholder ${
-                    currentPage >= 4 && 'visible'
-                  } flex-center`}
+                  className={[
+                    `cards-pagination__control index placeholder f-center`,
+                    currentPage >= 4 && 'visible',
+                  ].css()}
                 >
                   ...
                 </span>
@@ -99,6 +130,12 @@ export const CardsPagination = props => {
         })}
       </div>
 
+      <PaginationArrow
+        className={[currentPage === cardsArrLength && 'disabled'].css()}
+        direction="NEXT"
+        onClick={handlePagination('NEXT')}
+      />
+      {/*
       <div
         className={`cards-pagination__control flex-center arrow next ${
           currentPage === cardsArrLength && 'disabled'
@@ -108,6 +145,7 @@ export const CardsPagination = props => {
         <Icon icon="chevron-left" />
         <Shape className={`polygon`} />
       </div>
+*/}
     </div>
   );
 };

@@ -1,11 +1,12 @@
 import React, { useState, useEffect, useReducer, useRef, useContext, useMemo } from 'react';
 
 import { useDataContext } from '@contexts/DataContext';
-import { Icon, Shape } from '@components/graphic';
+import { Button } from '@components/action';
+import { Icon } from '@components/graphic';
 import { RangeFilter, SelectFilter, RadioFilter } from '@components/card';
 // import Background from '@components/layout/Background';
 import { filterReducer } from '@data';
-import { arrayUniqueValues } from '@utils';
+import { arrayUniqueValues, deepCopy } from '@utils';
 
 import { IGenericComponent, IGenericProps } from '@@types/generic-types';
 interface IComponentProps extends IGenericProps {
@@ -14,8 +15,7 @@ interface IComponentProps extends IGenericProps {
 }
 
 export const Filters = (props: IComponentProps): IGenericComponent => {
-  const { className, columns, data, updateFilteredData, activeFilters, updateActiveFilters } =
-    props;
+  const { className, columns, updateFilteredData, activeFilters, updateActiveFilters } = props;
 
   const [isVisible, setIsVisible] = useState(false);
 
@@ -75,6 +75,7 @@ export const Filters = (props: IComponentProps): IGenericComponent => {
       },
     });
     isReset.current = true;
+    return deepCopy(newFilterTree);
   };
 
   const initialFilters = useMemo(() => getInitialFilters(), [avatarsData]);
@@ -151,7 +152,7 @@ export const Filters = (props: IComponentProps): IGenericComponent => {
     dispatch({
       type: 'RESET',
       payload: {
-        data: initialFilters,
+        data: deepCopy(initialFilters),
       },
     });
     resetFlag.current = resetFlag.current + 1;
@@ -186,11 +187,14 @@ export const Filters = (props: IComponentProps): IGenericComponent => {
 */
     const updatedFilters = {};
     for (const attribute in state) {
+      console.log('applyFilter attribute', attribute);
       if (attribute in state) {
         updatedFilters[attribute] = [];
         for (const value in state[attribute]) {
-          if (value.active === true) {
-            updatedFilters[attribute].push(attribute);
+          console.log('applyFilter state[attribute]', state[attribute]);
+          const valueProps = state[attribute][value];
+          if (valueProps.active === true) {
+            updatedFilters[attribute].push(value);
           }
         }
       }
@@ -232,11 +236,19 @@ export const Filters = (props: IComponentProps): IGenericComponent => {
                   //                    updateActiveValues={newValues => updateFilter(dataColumn.name, newValues)}
                   resetFlag={resetFlag.current}
                 />
+              ) : dataColumn.type === 'select' ? (
+                <SelectFilter
+                  key={`${dataColumn.name}-${dataColumn.type}`}
+                  className={`filter__modal-filter--select`}
+                  label={dataColumn.name.replace('_', ' ')}
+                  values={!!state && state[dataColumn.name]}
+                  updateValues={updatedValues => updateFilter(dataColumn.name, updatedValues)}
+                />
               ) : (
-                dataColumn.type === 'select' && (
-                  <SelectFilter
+                dataColumn.type === 'radio' && (
+                  <RadioFilter
                     key={`${dataColumn.name}-${dataColumn.type}`}
-                    className={`filter__modal-filter--select`}
+                    className={`filter__modal-filter--radio`}
                     label={dataColumn.name.replace('_', ' ')}
                     values={!!state && state[dataColumn.name]}
                     updateValues={updatedValues => updateFilter(dataColumn.name, updatedValues)}
@@ -244,49 +256,26 @@ export const Filters = (props: IComponentProps): IGenericComponent => {
                 )
               ),
             )}
-
-            {/*
-                  dataColumn.type === 'range' ? (
-                  <RangeFilter
-                    className={`filter__modal-filter--slider`}
-                    values={!!state && state[dataColumn.name]}
-                    updateFilter={updatedValues => updateFilter(dataColumn.name, updatedValues)}
-                    resetFlag={resetFlag.current}
-                  />
-                ) : dataColumn.type === 'select' ? (
-                  <SelectFilter
-                    className={`filter__modal-filter--select`}
-                    values={!!state && state[dataColumn.name]}
-                    updateFilter={updatedValues => updateFilter(dataColumn.name, updatedValues)}
-                  />
-                ) : (
-                  dataColumn.type === 'radio' && (
-                    <RadioFilter
-                      className={`filter__modal-filter--radio`}
-                      values={!!state && state[dataColumn.name]}
-                      updateFilter={updatedValues => updateFilter(dataColumn.name, updatedValues)}
-                    />
-                  )
-                )
-*/}
           </div>
 
-          <div className={`filter__modal-actions flex-center-v`}>
-            <button
-              className={`filter__modal-button btn-text-lg flex-center`}
-              //                onClick={resetFilter()}
-              //                disabled={isReset.current}
-            >
-              Reset
-              <Shape className={`polygon`} />
-            </button>
-            <button
-              className={`filter__modal-button btn-text-lg flex-center`}
-              //                onClick={applyFilter()}
-            >
-              Apply
-              <Shape className={`polygon`} />
-            </button>
+          <div className={`filter__modal-actions f-center-y`}>
+            <Button
+              className={`filter__modal-button f-center reset`}
+              type="outline"
+              size="lg"
+              role="button"
+              label="Reset"
+              disabled={isReset.current}
+              onClick={resetFilter()}
+            />
+            <Button
+              className={`filter__modal-button f-center reset`}
+              type="outline"
+              size="lg"
+              role="button"
+              label="Apply"
+              onClick={applyFilter()}
+            />
           </div>
         </div>
       </dialog>

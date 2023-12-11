@@ -1,4 +1,4 @@
-import { IState } from './initialState';
+import { IDataState } from './dataInitialState';
 
 export interface IAction {
   type: string;
@@ -7,9 +7,9 @@ export interface IAction {
   };
 }
 
-export const dataReducer = (state: IState, action: IAction): IState => {
+export const dataReducer = (state: IDataState, action: IAction): IDataState => {
   const { type, payload } = action;
-  const { loading, error, data, totalCount } = payload;
+  const { loading, error, data, currentPage, totalCount } = payload;
 
   switch (type) {
     case 'SET_LOADING':
@@ -29,6 +29,12 @@ export const dataReducer = (state: IState, action: IAction): IState => {
       return {
         ...state,
         data,
+      };
+    case 'SET_CURRENT_PAGE':
+      console.log('SET_CURRENT_PAGE', payload);
+      return {
+        ...state,
+        currentPage,
       };
     case 'SET_TOTAL_COUNT':
       console.log('SET_TOTAL_COUNT', payload);

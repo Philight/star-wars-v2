@@ -324,14 +324,13 @@
 
     > .filters__modal {
       @apply fixed left-0 top-0 flex;
-      @apply bg-black-primary/80;
+      @apply bg-black-primary/95;
 
       > .filters__modal-inner {
         @apply px-[var(--gutter-outer-x)] py-[var(--gutter-outer-y)];
 
         > .filters__modal-header {
-          @apply justify-between;
-          margin-bottom: 24px;
+          @apply justify-between mb-[calc(var(--gutter-outer-y)*2/3)];
 
           h3 {
             @apply subheading subheading--lg;
@@ -348,16 +347,17 @@
 
         > .filters__modal-filters {
           @apply overflow-x-hidden overflow-y-scroll;
+          @apply -mx-[var(--gutter-outer-x)] px-[var(--gutter-outer-x)];
           border-bottom: 1px solid #acacac;
 
           > .filter__c {
-            @apply mb-[calc(var(--gutter-outer-y)/2)];
+            @apply mb-[calc(var(--gutter-outer-y))];
 
             &.range {
               @apply mb-[calc(var(--gutter-outer-y))];
 
               > .range-slider__slider {
-                @apply relative;
+                @apply relative mt-2;
                 > .range-slider__values {
                   z-index: 2;
                   position: absolute;
@@ -425,7 +425,13 @@
             }
 
             &.select {
-              --values-gap: 8px;
+              @apply flex flex-wrap;
+              .select-filter__slider {
+                .button__c {
+                  @apply py-4;
+                }
+
+              }
               .select-filter__value {
                 @apply ml-4 opacity-40;
                 &:nth-child(1) {
@@ -442,18 +448,22 @@
               }
             }
 
-            .filter__modal-filter--radio.radio-filter__c {
-              --values-gap: 12px;
+            &.radio {
+              @apply flex flex-wrap;
+              > label {
+                @apply mb-2 basis-full;
+              }
+              .radio-filter__values {
+                @apply basis-full;
+              }
               .radio-filter__value {
-                justify-content: space-between;
-                margin-top: var(--values-gap);
+                @apply mt-4 justify-between opacity-40;
                 &:nth-child(1) {
-                  margin-top: 0;
+                  @apply mt-0;
                 }
 
-                opacity: var(--btn-opa-inactive);
                 &.active {
-                  opacity: 1;
+                  @apply opacity-100;
                 }
 
                 > .radio-filter__value-toggle {
@@ -461,20 +471,18 @@
                   height: 24px;
                   width: 18px;
                 }
+                > .radio-filter__value-name {
+                  @apply body body--md text-white;
+                }
               }
             }
           }
         }
 
         > .filter__modal-actions {
-          margin: auto;
-          margin-bottom: 0;
+          @apply mx-auto mt-4;
           > .filter__modal-button {
-            position: relative;
-            padding: 4px 22px 3px 26px;
-            margin: 0 6px;
-            background-color: transparent;
-            border: none;
+            @apply mx-2;
 
             &[disabled] {
               opacity: var(--btn-opa-inactive);
@@ -510,6 +518,70 @@
     .card__secondary-title {
       @apply help-text help-text--md;
       @apply absolute bottom-6;
+    }
+  }
+
+  .cards-pagination__c {
+    @apply mx-[auto] my-[var(--gutter-outer-y)] mt-[calc(var(--gutter-outer-y)*2)] ;
+    @apply btn-text btn-text--md;
+
+    .cards-pagination__control__indexes {
+      @apply mx-[calc(var(--gutter-outer-x)/2)];
+    }
+
+    .cards-pagination__control {
+      @apply relative;
+      position: relative;
+      color: #fff;
+      opacity: 0;
+      width: 0;
+      min-height: 32px;
+
+      transition: all 0.4s ease-in;
+      cursor: pointer;
+
+      &.visible:not(.arrow) {
+        opacity: 1;
+        width: auto;
+        min-width: 32px;
+        margin: 0 4px;
+      }
+
+      &.arrow {
+        opacity: 1;
+        width: auto;
+        min-width: 42px;
+        min-height: 42px;
+
+        &.disabled {
+          opacity: var(--btn-opa-inactive);
+        }
+
+        &:hover {
+          transform: scale(1.13);
+          transition: transform 0.2s ease-out;
+        }
+      }
+      &:not(.arrow) {
+        .shape__c {
+          box-shadow: inset 0px 0px 20px 0px rgba(255, 255, 255, 0.61);
+          transition: box-shadow 0.5s ease-in-out;
+        }
+        &.selected {
+          .shape__c {
+            box-shadow:
+              0px 0px 6px 0px #fff,
+              inset 0px 0px 20px 0px rgba(255, 255, 255, 0.61);
+          }
+        }
+      }
+
+      .icon__c {
+        @apply w-6 h-6;
+        .icon {
+          @apply bg-white;
+        }
+      }
     }
   }
 }

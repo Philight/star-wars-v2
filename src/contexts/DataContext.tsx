@@ -3,7 +3,7 @@ import { dataInitialState, IData, IDataState, dataReducer } from '@data';
 
 export const DataContext = createContext();
 
-interface IContextType extends IState {
+interface IContextType extends IDataState {
   setLoading: (_loading: boolean) => void;
   setError: (_error: Error | null) => void;
   setData: (_data: IData) => void;
@@ -40,6 +40,15 @@ export const DataProvider = ({ children }: PropsWithChildren<T>): React.FC<React
     });
   };
 
+  const setCurrentPage = (currentPage: number): void => {
+    dispatch({
+      type: 'SET_CURRENT_PAGE',
+      payload: {
+        currentPage,
+      },
+    });
+  };
+
   const setTotalCount = (count: number): void => {
     dispatch({
       type: 'SET_TOTAL_COUNT',
@@ -50,14 +59,15 @@ export const DataProvider = ({ children }: PropsWithChildren<T>): React.FC<React
   };
 
   const contextValue = {
-    currentPage: state.currentPage,
     data: state.data,
+    currentPage: state.currentPage,
     totalCount: state.totalCount,
     loading: state.loading,
     error: state.error,
     setLoading,
     setError,
     setData,
+    setCurrentPage,
     setTotalCount,
   };
 

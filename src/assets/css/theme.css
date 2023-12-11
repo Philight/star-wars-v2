@@ -119,6 +119,7 @@
 }
 .subheading--md {
   @apply text-lg;
+  @apply tracking-1;
 }
 .subheading--sm {
   @apply text-base;
