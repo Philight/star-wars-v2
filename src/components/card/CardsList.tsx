@@ -1,14 +1,13 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 
 import { AnimatePresence } from 'framer-motion';
 
-import { getPaginatedData, getObject } from '@api/starwars';
 import { useDataContext } from '@contexts/DataContext';
 import { Card, CardsPagination, Filters } from '@components/card';
 import { Loader } from '@components/graphic';
 
-import { createArrayGroups, useDeviceDimensions, arrayUniqueValues, TDeviceType } from '@utils';
+import { createArrayGroups, useDeviceDimensions, TDeviceType } from '@utils';
 
 const FILTER_COLUMNS = [
   { name: 'height', type: 'range' },
