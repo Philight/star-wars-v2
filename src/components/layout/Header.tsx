@@ -1,6 +1,7 @@
 // @ts-ignore
 import React, { useState, useEffect } from 'react';
-import { motion, useMotionValue, useTransform, animate } from 'framer-motion';
+import { useNavigate } from 'react-router-dom';
+import { motion } from 'framer-motion';
 
 import { Icon, Logo } from '@components/graphic';
 import { Navigation } from '@components/layout';
@@ -11,6 +12,7 @@ interface IComponentProps extends IGenericProps {}
 export const Header = (props: IComponentProps): IGenericComponent => {
   const { className } = props;
   const [menuIsVisible, setMenuVisible] = useState<boolean>(false);
+  const navigate = useNavigate();
 
   useEffect(() => {
     setMenuVisible(false);
@@ -20,9 +22,14 @@ export const Header = (props: IComponentProps): IGenericComponent => {
     setMenuVisible(prevState => !prevState);
   };
 
+  const goToPage = (path: string) => (event: React.MouseEvent<HTMLElement>) => {
+    event.preventDefault();
+    navigate(path);
+  };
+
   return (
     <header className={[`header__c`, className].css()}>
-      <Navigation className={[``].css()} isOpen={menuIsVisible} />
+      <Navigation className={[``].css()} isOpen={menuIsVisible} toggleMenu={toggleMenu()} />
       <motion.div className={[`header__burger f-center`].css()}>
         <Icon
           className={[`header__burger-icon open`].css()}
@@ -47,8 +54,8 @@ export const Header = (props: IComponentProps): IGenericComponent => {
           onClick={toggleMenu()}
         />
       </motion.div>
-      <Logo />
-      <Icon className={[`header__darth`].css()} icon="darth-vader" />
+      <Logo onClick={goToPage('/')} />
+      <Icon className={[`header__darth`].css()} icon="darth-vader" onClick={goToPage('/avatars')} />
     </header>
   );
 };

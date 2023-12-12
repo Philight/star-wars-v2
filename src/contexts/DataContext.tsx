@@ -1,16 +1,19 @@
-import React, { PropsWithChildren, useReducer, createContext, useContext } from 'react';
+import { PropsWithChildren, useReducer, createContext, useContext } from 'react';
 import { dataInitialState, IData, IDataState, dataReducer } from '@data';
 
-export const DataContext = createContext();
+import { IGenericComponent } from '@@types/generic-types';
 
 interface IContextType extends IDataState {
   setLoading: (_loading: boolean) => void;
   setError: (_error: Error | null) => void;
   setData: (_data: IData) => void;
-  setTotalCount: (_count: number) => void;
+  setCurrentPage: (_: number | unknown) => void;
+  setTotalCount: (_count: number | unknown) => void;
 }
 
-export const DataProvider = ({ children }: PropsWithChildren<T>): React.FC<React.ReactNode> => {
+export const DataContext = createContext<IContextType>({} as IContextType);
+
+export const DataProvider = ({ children }: PropsWithChildren): IGenericComponent => {
   const [state, dispatch] = useReducer(dataReducer, dataInitialState);
 
   const setLoading = (loading: boolean): void => {
@@ -40,7 +43,7 @@ export const DataProvider = ({ children }: PropsWithChildren<T>): React.FC<React
     });
   };
 
-  const setCurrentPage = (currentPage: number): void => {
+  const setCurrentPage = (currentPage: number | unknown): void => {
     dispatch({
       type: 'SET_CURRENT_PAGE',
       payload: {
@@ -49,7 +52,7 @@ export const DataProvider = ({ children }: PropsWithChildren<T>): React.FC<React
     });
   };
 
-  const setTotalCount = (count: number): void => {
+  const setTotalCount = (count: number | unknown): void => {
     dispatch({
       type: 'SET_TOTAL_COUNT',
       payload: {

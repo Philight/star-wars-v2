@@ -1,25 +1,25 @@
 type TGenericObject = { [key: string]: unknown };
 
 export interface IData {
-  avatars: TGenericObject[];
-  films: TGenericObject[];
-  planets: TGenericObject[];
-  species: TGenericObject[];
-  starships: TGenericObject[];
-  vehicles: TGenericObject[];
+  avatars: TGenericObject[] | unknown;
+  films: TGenericObject[] | unknown;
+  planets: TGenericObject[] | unknown;
+  species: TGenericObject[] | unknown;
+  starships: TGenericObject[] | unknown;
+  vehicles: TGenericObject[] | unknown;
 }
 
 export interface IDataState {
-  data: IData;
-  totalCount: number;
+  data: IData | unknown | {};
+  totalCount: number | unknown;
   currentPage: number;
-  loading: boolean;
+  loading: boolean | unknown;
   error?: unknown;
 }
 
 export const dataInitialState: IDataState = {
   data: {},
-  totalCount: null,
+  totalCount: 0,
   currentPage: 1,
   loading: false,
   error: null,

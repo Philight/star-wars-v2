@@ -17,15 +17,17 @@ interface IComponentProps extends IGenericProps {
 }
 
 export const NavigationArrow = (props: IComponentProps): IGenericComponent => {
-  const { className, style, type, size, link, label, withShadow, disabled } = props;
+  const { className, style, type, size, link = '', label, withShadow, disabled } = props;
 
   const navigate = useNavigate();
 
   const goToPage =
     (path: string) =>
-    (event): void => {
-      event.preventDefault();
-      navigate(path);
+    (event: React.MouseEvent<HTMLElement>): void => {
+      if (link) {
+        event.preventDefault();
+        navigate(path);
+      }
     };
 
   return (
@@ -36,6 +38,7 @@ export const NavigationArrow = (props: IComponentProps): IGenericComponent => {
         type,
         size,
         disabled && 'disabled',
+        !withShadow && 'no-shadow',
       ].css()}
       style={style}
       onClick={goToPage(link)}

@@ -23,7 +23,7 @@ export type TDeviceType =
   | 'DESKTOP_LG'
   | 'DESKTOP_XL';
 
-const getDeviceType = (width: number): TDeviceType => {
+const getDeviceType = (width: number): TDeviceType | string => {
   for (const [DEVICE, MIN_WIDTH] of Object.entries(BREAKPOINTS)) {
     if (width >= MIN_WIDTH) {
       return DEVICE;

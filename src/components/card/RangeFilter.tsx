@@ -20,12 +20,12 @@ const SliderThumb = ({ position, index, updateIndex, step }): IGenericComponent 
     }
   }, [isDragging]);
 
-  const onDragStart = e => {
+  const onDragStart = (e): void => {
     const startX = DEVICE_IS_TOUCH ? e.targetTouches[0].clientX : e.clientX;
     dragStart.current = startX;
   };
 
-  const onDragMove = e => {
+  const onDragMove = (e): void => {
     const movedX = DEVICE_IS_TOUCH ? e.targetTouches[0].clientX : e.clientX;
 
     const distance = movedX - dragStart.current;
@@ -46,7 +46,7 @@ const SliderThumb = ({ position, index, updateIndex, step }): IGenericComponent 
     }
   };
 
-  const onDragEnd = () => {
+  const onDragEnd = (): void => {
     dragStart.current = null;
     setIsDragging(false);
   };
@@ -80,17 +80,12 @@ export const RangeFilter = (props: IComponentProps): IGenericComponent => {
   const [leftIndex, setLeftIndex] = useState(0);
   const [rightIndex, setRightIndex] = useState(0);
 
-  //  const containerRef = useRef(null);
   const filterKeys = Object.keys(values) ?? [];
 
   // Percentage
   const step = 100 / (filterKeys?.length - 1);
 
   useEffect(() => {
-    console.log('filterKeys', filterKeys);
-    console.log('leftIndex, ', leftIndex);
-    console.log('rightIndex, ', rightIndex);
-
     if (!!updateValues && filterKeys) {
       const newValues = { ...values };
       for (let i = 0; i < filterKeys.length; i++) {
@@ -133,10 +128,7 @@ export const RangeFilter = (props: IComponentProps): IGenericComponent => {
   };
 
   return (
-    <div
-      className={[`filter__c range f-col`, className].css()}
-      //    ref={containerRef}
-    >
+    <div className={[`filter__c range f-col`, className].css()}>
       {!!label && <label>{label}</label>}
       <div className={`range-slider__slider f-center-y`}>
         <div className={`range-slider__values`}>

@@ -1,18 +1,19 @@
 // @ts-ignore
 import React, { useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { motion, useMotionValue, useTransform, animate } from 'framer-motion';
+import { motion, useMotionValue, useTransform, animate, MotionValue } from 'framer-motion';
 
 import { Button } from '@components/action';
 import { Layer } from '@components/graphic';
 
-import { IGenericComponent, IGenericProps } from '@@types/generic-types';
+import { IGenericComponent, IGenericProps, TGenericObject } from '@@types/generic-types';
 interface IComponentProps extends IGenericProps {
-  onClick?: React.MouseEvent<HTMLButtonElement, MouseEvent>;
+  isOpen: boolean;
+  toggleMenu: () => void;
 }
 
 export const Navigation = (props: IComponentProps): IGenericComponent => {
-  const { className, isOpen } = props;
+  const { className, isOpen, toggleMenu } = props;
   const navigate = useNavigate();
 
   const mMenu = useMotionValue(0);
@@ -24,7 +25,9 @@ export const Navigation = (props: IComponentProps): IGenericComponent => {
   const aMenuItemX2 = useTransform(mMenu, [1, 2], [-80, 0]);
   const aMenuItemX3 = useTransform(mMenu, [1, 2], [-120, 0]);
 
-  const ANIMATIONS = {
+  const ANIMATIONS: {
+    [key: string]: MotionValue<any>;
+  } = {
     menu: mMenu,
   };
 
@@ -32,12 +35,13 @@ export const Navigation = (props: IComponentProps): IGenericComponent => {
     element: string,
     fromValue: number,
     toValue: number,
-    options?: unknown = {},
-  ): (() => void) => {
+    options: TGenericObject = {},
+  ): Promise<any> => {
     const { delay, ease, duration } = options;
     const motionValue = ANIMATIONS[element];
     return new Promise(resolve => {
       motionValue.set(fromValue);
+      // @ts-ignore
       const animation = animate(motionValue, toValue, {
         ease: ease ?? 'linear',
         duration: duration ?? 0.4,
@@ -62,9 +66,10 @@ export const Navigation = (props: IComponentProps): IGenericComponent => {
     }
   }, [isOpen]);
 
-  const goToPage = (path: string) => event => {
+  const goToPage = (path: string) => (event: React.MouseEvent<HTMLElement>) => {
     event.preventDefault();
     navigate(path);
+    toggleMenu();
   };
 
   return (

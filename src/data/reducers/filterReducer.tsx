@@ -1,19 +1,21 @@
-import { IState } from './filterInitialState';
+import { IFilterState } from './filterInitialState';
 
 export interface IAction {
   type: string;
   payload: {
-    [key: string]: unknown;
+    [key: string]: any;
   };
 }
 
-export const filterReducer = (state: IState, action: IAction): IState => {
+export const filterReducer = (state: IFilterState, action: IAction): IFilterState => {
   const { type, payload } = action;
   const { column, data } = payload ?? {};
 
   switch (type) {
+    // @ts-ignore
     case 'INITIALIZE':
       console.log('INITIALIZE', payload);
+    // eslint-disable-next-line no-fallthrough
     case 'RESET':
       console.log('RESET', payload);
       return data;

@@ -4,17 +4,7 @@ import { BrowserRouter, Route, Routes } from 'react-router-dom';
 
 const LandingLayout = lazy(() => import('@layouts/LandingLayout'));
 const AvatarsLayout = lazy(() => import('@layouts/AvatarsLayout'));
-// const ContactLayout = lazy(() => import('@layouts/ContactLayout'));
 
-// const LandingPage = lazy(() => import("@pages").then((module) => ({ default: module.LandingPage }) ));
-// const LandingPage = lazy(() => import("@pages").then( (module) => module.LandingPage ));
-/*
-Promise.all(
-  Array.from({ length: 10 }).map((_, index) =>
-    import(`/modules/module-${index}.js`),
-  ),
-).then((modules) => modules.forEach((module) => module.load()));
-*/
 const StyleGuide = lazy(() => import('@pages/StyleGuide'));
 
 import { Loader } from '@components/graphic';
@@ -26,13 +16,6 @@ import PACKAGE_JSON from 'ROOT/package.json';
 import { dynamicImport, type IImportMapping } from '@utils';
 import { IGenericComponent } from '@@types/generic-types';
 
-/*
-const ROUTE_TO_PAGE = {
-  '/': 'LandingPage',
-  '/about': 'AboutPage',
-  '/contact': 'ContactPage',
-};
-*/
 const ROUTE_TO_PAGE = {
   LANDING: {
     '/': 'LandingPage',

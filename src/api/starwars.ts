@@ -4,11 +4,14 @@ import { fetchData } from '@utils';
 const GET_OBJECTS = API_BASE + API_ROUTES.API.GET_OBJECTS;
 const GET_OBJECT = API_BASE + API_ROUTES.API.GET_OBJECT;
 
-export type ResponseType = { [key: string]: unknown };
+export type TResponseType = { [key: string]: unknown };
 
-export const getPaginatedData = async (objects, page): Promise<ResponseType> => {
+export const getPaginatedData = async (
+  objects: string,
+  page: string | number = 1,
+): Promise<TResponseType> => {
   const API_URL = new URL(GET_OBJECTS.replace('$objects', objects));
-  API_URL.searchParams.set('page', page);
+  API_URL.searchParams.set('page', String(page));
   try {
     const response = await fetchData({
       method: 'GET',
@@ -17,14 +20,14 @@ export const getPaginatedData = async (objects, page): Promise<ResponseType> => 
     // eslint-disable-next-line no-console
     console.log('getPaginatedData response', response);
     return response.data;
-  } catch (err) {
+  } catch (err: any) {
     console.error('getPaginatedData err', err);
     return err;
   }
 };
 
-export const getObject = async (object, id): Promise<ResponseType> => {
-  const API_URL = new URL(GET_OBJECT.replace('$object', object).replace(':id', id));
+export const getObject = async (object: string, id: string | number): Promise<TResponseType> => {
+  const API_URL = new URL(GET_OBJECT.replace('$object', object).replace(':id', String(id)));
   try {
     const response = await fetchData({
       method: 'GET',
@@ -37,7 +40,7 @@ export const getObject = async (object, id): Promise<ResponseType> => {
     // eslint-disable-next-line no-console
     console.log('getObject response', response);
     return response.data;
-  } catch (err) {
+  } catch (err: any) {
     console.error('getObject err', err);
     return err;
   }

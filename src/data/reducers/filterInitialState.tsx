@@ -1,5 +1,5 @@
 type TGenericObject = { [key: string]: unknown };
 
-export interface IState extends TGenericObject {}
+export interface IFilterState extends TGenericObject {}
 
-export const filterInitialState: IState = {};
+export const filterInitialState: IFilterState = {};

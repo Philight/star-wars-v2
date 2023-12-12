@@ -3,7 +3,7 @@ import { IDataState } from './dataInitialState';
 export interface IAction {
   type: string;
   payload: {
-    [key: string]: unknown;
+    [key: string]: any;
   };
 }
 

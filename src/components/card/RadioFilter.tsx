@@ -24,19 +24,18 @@ export const RadioFilter = (props: IComponentProps): IGenericComponent => {
       {!!label && <label>{label}</label>}
 
       <div className={[`radio-filter__values f-col`].css()}>
-        {
-          filterKeys.map(key => (
-            <div
-              className={[`radio-filter__value f-center-y`, values[key].active && 'active'].css()}
-              key={key}
-              onClick={toggleValue(key)}
-            >
-              <label className={`radio-filter__value-name f-center`}>{values[key].label}</label>
-              <figure className={`radio-filter__value-toggle`}>
-                <Shape className={`polygon`} />
-              </figure>
-            </div>
-          ))}
+        {filterKeys.map(key => (
+          <div
+            className={[`radio-filter__value f-center-y`, values[key].active && 'active'].css()}
+            key={key}
+            onClick={toggleValue(key)}
+          >
+            <label className={`radio-filter__value-name f-center`}>{values[key].label}</label>
+            <figure className={`radio-filter__value-toggle`}>
+              <Shape className={`polygon`} />
+            </figure>
+          </div>
+        ))}
       </div>
     </div>
   );

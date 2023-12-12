@@ -5,13 +5,9 @@ import { Icon, Shape } from '@components/graphic';
 import { IGenericComponent, IGenericProps } from '@@types/generic-types';
 interface IComponentProps extends IGenericProps {
   onClick?: React.MouseEvent<HTMLButtonElement, MouseEvent>;
-  type?: 'standard' | 'outline';
-  size?: 'sm' | 'md' | 'lg';
-  link?: string;
-  icon?: string;
-  label?: string;
-  withShadow?: boolean;
-  disabled?: boolean;
+  placeholder?: string;
+  onChange?: (_: any) => void;
+  onEnter?: (_: any) => void;
 }
 
 export const SearchBar = (props: IComponentProps): IGenericComponent => {
@@ -19,7 +15,7 @@ export const SearchBar = (props: IComponentProps): IGenericComponent => {
 
   const [value, setValue] = useState('');
   const [searchValue, setSearchValue] = useState('');
-  const [isFocused, setIsFocused] = useState(false);
+  const [isFocused, setIsFocused] = useState<boolean>(false);
 
   //  const debounced = useDebouncedCallback((value) => { setValue(value); }, 1000);
   const updateInputValue = useDebouncedCallback((newValue: string): void => {
@@ -42,16 +38,16 @@ export const SearchBar = (props: IComponentProps): IGenericComponent => {
 
   const handleTyping =
     () =>
-    (event): void => {
-      updateInputValue(event.target.value);
+    (event: React.ChangeEvent<HTMLInputElement>): void => {
+      updateInputValue((event.target as HTMLInputElement).value);
     };
 
   const handleKeyDown =
     () =>
-    (event): void => {
+    (event: React.KeyboardEvent<HTMLInputElement>): void => {
       const keyCode = event.keyCode || event.which;
       if (keyCode === 13 || event.key === 'Enter') {
-        updateSearchValue(event.target.value);
+        updateSearchValue((event.target as HTMLInputElement).value);
       }
     };
 

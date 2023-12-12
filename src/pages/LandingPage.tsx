@@ -3,40 +3,26 @@ import { useNavigate, useOutletContext } from 'react-router-dom';
 import { motion, useMotionValue, useTransform, useDragControls, animate } from 'framer-motion';
 
 import { Button } from '@components/action';
-import { Shape, Logo } from '@components/graphic';
+import { Logo } from '@components/graphic';
 import { withPageData } from '@utils';
 
 const INTRO_TEXT = `May The Force Be With You`;
 const BUTTON_TEXT = `ENTER`;
 
-const FADE_ANIM = {
-  initial: {
-    //    opacity: 0
-  },
-  animate: {
-    opacity: 1,
-  },
-  transition: {
-    ease: 'linear',
-    duration: 1.2,
-  },
-};
-
 import { IGenericComponent, IGenericProps } from '@@types/generic-types';
-interface IPageProps extends IGenericProps {
-  animationProps?: unknown;
-}
+interface IPageProps extends IGenericProps {}
 
-const LandingPage = (props: IPageProps): IGenericComponent => {
-  const { className, style, currentTransStage, animationProps = {} } = props;
-  const { layoutProps } = useOutletContext();
+const LandingPage = (): IGenericComponent => {
+  const { layoutProps }: IPageProps = useOutletContext();
+  const { className, style, animationProps } = layoutProps;
+
   const navigate = useNavigate();
 
-  const { motionValues } = layoutProps.animationProps;
-  const aHeadingOpacity = motionValues && useTransform(motionValues.mDragStage, [2, 3], [0, 1]);
-  const aSubheadingOpacity = motionValues && useTransform(motionValues.mDragStage, [3, 4], [0, 1]);
+  const motionValues = animationProps?.motionValues;
+  const aHeadingOpacity = useTransform(motionValues?.mDragStage, [2, 3], [0, 1]);
+  const aSubheadingOpacity = useTransform(motionValues?.mDragStage, [3, 4], [0, 1]);
 
-  const aRevealOpacity = motionValues && useTransform(motionValues.mDragStage, [4, 5], [0, 1]);
+  const aRevealOpacity = useTransform(motionValues?.mDragStage, [4, 5], [0, 1]);
 
   const goToAvatars = (e): void => {
     e.preventDefault();
@@ -44,10 +30,7 @@ const LandingPage = (props: IPageProps): IGenericComponent => {
   };
 
   return (
-    <motion.main
-      className={['page__c landing f-col f-center', layoutProps.className].css()}
-      style={layoutProps.style}
-    >
+    <motion.main className={['page__c landing f-col f-center', className].css()} style={style}>
       <Logo className={``} style={{ opacity: aRevealOpacity }} />
       <motion.h2 className={`page__heading`} style={{ opacity: aHeadingOpacity }}>
         {INTRO_TEXT}

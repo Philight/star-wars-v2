@@ -1,4 +1,5 @@
-import React, { Icon, Shape } from '@components/graphic';
+import React from 'react';
+import { Icon, Shape } from '@components/graphic';
 
 import { IGenericComponent, IGenericProps } from '@@types/generic-types';
 
@@ -63,15 +64,6 @@ export const CardsPagination = (props: IComponentProps): IGenericComponent => {
         showResults ? 'show-results' : '',
       ].css()}
     >
-      {/*
-      <div
-        className={[`cards-pagination__control f-center arrow prev`,currentPage === 1 && 'disabled'].css()}
-        onClick={handlePagination('PREV')}
-      >
-        <Icon icon="chevron-left" className={``} />
-        <Shape className={`polygon`} />
-      </div>
-*/}
       <PaginationArrow
         className={[currentPage === 1 && 'disabled'].css()}
         direction="PREV"
@@ -92,7 +84,7 @@ export const CardsPagination = (props: IComponentProps): IGenericComponent => {
             ([pageIndex - 1, pageIndex, pageIndex + 1].includes(currentPage) &&
               (currentPage === cardsArrLength - 2 ? pageIndex !== currentPage - 1 : true));
           return (
-            <>
+            <React.Fragment key={pageIndex}>
               {pageIndex === cardsArrLength && (
                 <span
                   className={[
@@ -125,7 +117,7 @@ export const CardsPagination = (props: IComponentProps): IGenericComponent => {
                   ...
                 </span>
               )}
-            </>
+            </React.Fragment>
           );
         })}
       </div>
@@ -135,17 +127,6 @@ export const CardsPagination = (props: IComponentProps): IGenericComponent => {
         direction="NEXT"
         onClick={handlePagination('NEXT')}
       />
-      {/*
-      <div
-        className={`cards-pagination__control flex-center arrow next ${
-          currentPage === cardsArrLength && 'disabled'
-        }`}
-        onClick={handlePagination('NEXT')}
-      >
-        <Icon icon="chevron-left" />
-        <Shape className={`polygon`} />
-      </div>
-*/}
     </div>
   );
 };

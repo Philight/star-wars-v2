@@ -5,9 +5,10 @@ import { Icon, Shape } from '@components/graphic';
 
 import { IGenericComponent, IGenericProps } from '@@types/generic-types';
 interface IComponentProps extends IGenericProps {
-  onClick?: React.MouseEvent<HTMLButtonElement, MouseEvent>;
+  onClick?: React.MouseEventHandler<HTMLButtonElement> | undefined;
   type?: 'standard' | 'outline';
   size?: 'sm' | 'md' | 'lg';
+  role?: string;
   link?: string;
   icon?: string;
   label?: string;

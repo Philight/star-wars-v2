@@ -130,7 +130,7 @@ module.exports = {
     'no-shadow-restricted-names': 2, // disallow shadowing of names such as arguments
     'no-undef': 2, // disallow use of undeclared variables unless mentioned in a /*global */ block
     'no-undef-init': 2, // disallow use of undefined when initializing variables
-    'no-undefined': 2, // disallow use of undefined variable (off by default)
+    'no-undefined': 1, // disallow use of undefined variable (off by default)
     'no-unused-vars': [1, { argsIgnorePattern: '^_' }], // disallow declaration of variables that are not used in the code
     'no-use-before-define': 2, // disallow use of variables before they are defined
 
@@ -233,5 +233,6 @@ module.exports = {
     '@typescript-eslint/ban-ts-comment': 1,
     '@typescript-eslint/explicit-function-return-type': 1,
     '@typescript-eslint/no-unused-vars': 0,
+    '@typescript-eslint/no-explicit-any': 1,
   },
 };

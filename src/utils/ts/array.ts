@@ -1,5 +1,5 @@
-export const createArrayGroups = (groupSize: number, initialArray: any[]): any[][] => {
-  const arrayGroups: any[][] = [];
+export const createArrayGroups = (groupSize: number, initialArray: unknown[]): unknown[][] => {
+  const arrayGroups: unknown[][] = [];
 
   // Divide the initial array into groups of size `groupSize`
   for (let i = 0; i < initialArray.length; i = i + groupSize) {
@@ -11,8 +11,8 @@ export const createArrayGroups = (groupSize: number, initialArray: any[]): any[]
   return arrayGroups;
 };
 
-export const arrayUniqueValues = array => {
-  return array.filter((item, pos) => array.indexOf(item) === pos);
+export const arrayUniqueValues = (array: Array<unknown>): Array<unknown> => {
+  return array.filter((item: unknown, pos: number) => array.indexOf(item) === pos);
 };
 
 // @ts-ignore

@@ -1,79 +1,88 @@
-import { useState, useEffect, useRef, useContext } from 'react';
-import { DataContext } from '@contexts/DataProvider';
-import Shape from '@components/graphic/Shape';
-import Layer from '@components/graphic/Layer';
-import { CONSTANTS } from '@data';
-import { fetchAdditionalData } from '@utils';
+import { useState, useEffect, useRef, useCallback } from 'react';
 
-export const CardDetail = props => {
+import { useDataContext } from '@contexts/DataContext';
+import { Button } from '@components/action';
+import { Shape, Layer, Loader } from '@components/graphic';
+import { Image } from '@components/media';
+import { IMAGE_URLS } from '@data';
+import { deepCopy } from '@utils';
+
+import { IGenericComponent, IGenericProps } from '@@types/generic-types';
+interface IComponentProps extends IGenericProps {}
+
+export const CardDetail = (props: IComponentProps): IGenericComponent => {
   const { className } = props;
-  const contextData = useContext(DataContext);
+
+  const context = useDataContext();
+  const avatarsData = context.data?.avatars ?? [];
+  const loading = context.loading;
+
+  const [cardData, setCardData] = useState({});
 
   const [activeTab, setActiveTab] = useState({ name: 'STATS', index: 0 });
   const [indicatorStyle, setIndicatorStyle] = useState({ width: 60, left: 0 });
-
-  const [cardFilms, setCardFilms] = useState([]);
-  const [cardVehicles, setCardVehicles] = useState([]);
-  const [cardStarships, setCardStarships] = useState([]);
-  const [cardDetails, setCardDetails] = useState({});
-  const [cardSpecies, setCardSpecies] = useState('');
-  const [cardPlanet, setCardPlanet] = useState('');
   const tabRef = useRef();
 
-  const cardId = window.location.pathname.split('/character/')[1];
+  const cardId = window.location.pathname.split('/character/')[1].split('/')[0];
 
-  const getDataById = (DATA_ARRAY, id) => {
-    for (const dataObj of DATA_ARRAY) {
-      if (dataObj.url.split('/people/')[1].split('/')[0] === id) {
-        setCardDetails(dataObj);
-        fetchAdditionalData(
-          dataObj.films,
-          dataObj.vehicles,
-          dataObj.starships,
-          dataObj.species,
-          dataObj.homeworld,
-        ).then(data => {
-          setCardFilms(data?.films);
-          setCardVehicles(data?.vehicles);
-          setCardStarships(data?.starships);
-          setCardSpecies(data?.species);
-          setCardPlanet(data?.homeworld);
-        });
+  const getId = (url: string, objectName: string): string =>
+    url && url?.toString()?.split(`/${objectName}/`)[1]?.split('/')[0];
+
+  const getDataById = (data, id): void => {
+    if (data.length < 1) {
+      return;
+    }
+
+    const foundCharacter = data.find(character => getId(character.url, 'people') === id);
+
+    if (foundCharacter === undefined) {
+      return;
+    }
+
+    const characterData = deepCopy(foundCharacter);
+
+    const planetId = getId(characterData.homeworld, 'planets');
+    const planetData = context.data?.planets.find(elem => getId(elem.url, 'planets') === planetId);
+    characterData.homeworld = {
+      ...planetData,
+      id: planetId,
+    };
+
+    // Replace each URL with data
+    for (const objName of ['films', 'species', 'vehicles', 'starships']) {
+      // Iterate through URLs Array
+      for (let i = 0; i < characterData[objName].length; i++) {
+        const instance = characterData[objName][i];
+        const objId = getId(instance, objName);
+        const objData = context.data?.[objName].find(elem => getId(elem.url, objName) === objId);
+        characterData[objName][i] = {
+          ...objData,
+          id: objId,
+        };
       }
     }
+    setCardData(characterData);
   };
 
-  const initialRun = useRef(true);
   useEffect(() => {
-    if (initialRun.current) {
-      initialRun.current = false;
-      getDataById(contextData.data.people, cardId);
-      setIndicatorStyle({ width: tabRef.current.getBoundingClientRect().width, left: 0 });
-    }
+    getDataById(avatarsData, cardId);
+  }, [avatarsData]);
+
+  useEffect(() => {
+    setIndicatorStyle({ width: tabRef.current?.getBoundingClientRect().width, left: 0 });
   }, []);
 
-  const getRoman = number => {
-    switch (number) {
-      case 1:
-        return 'I';
-      case 2:
-        return 'II';
-      case 3:
-        return 'III';
-      case 4:
-        return 'IV';
-      case 5:
-        return 'V';
-      case 6:
-        return 'VI';
-      case 7:
-        return 'VII';
-      default:
-        return number;
-    }
+  const ROMAN_LETTERS = {
+    1: 'I',
+    2: 'II',
+    3: 'III',
+    4: 'IV',
+    5: 'V',
+    6: 'VI',
+    7: 'VII',
   };
 
-  const changeTab = TABNAME => () => {
+  const changeTab = (TABNAME: 'STATS' | 'VEHICLES' | 'STARSHIPS') => (): void => {
     let index = 0;
     if (TABNAME === 'STATS') {
       index = 0;
@@ -86,200 +95,205 @@ export const CardDetail = props => {
     setActiveTab({ name: TABNAME, index: index });
   };
 
-  const handleTabIndicator = () => event => {
-    const targetWidth = event.target.getBoundingClientRect().width;
-    const targetLeft = event.target.offsetLeft;
-    setIndicatorStyle({ width: targetWidth, left: targetLeft });
-  };
+  const handleTabIndicator =
+    () =>
+    (event): void => {
+      const targetWidth = event.target.getBoundingClientRect().width;
+      const targetLeft = event.target.offsetLeft;
+      setIndicatorStyle({ width: targetWidth, left: targetLeft });
+    };
 
-  const EmptyData = () => (
+  const EmptyData = (): IGenericComponent => (
     <span className={`card-detail__related-table__data-item no-data h2`}>No Data Found</span>
   );
 
+  if (loading) {
+    return <Loader fullscreen />;
+  }
+
   return (
-    <div className={`card-detail__c ${className} flex-col`}>
-      <section className={`card-detail__intro flex-center-v flex-col`}>
-        <h1 className={`card-detail__name h1`}>{cardDetails.name}</h1>
+    <div className={[`card-detail__c`, className].css()}>
+      <div className={[`card-detail__inner f-col`].css()}>
+        <section className={`card-detail__summary f-center-y f-col`}>
+          <h1 className={`card-detail__name`}>{cardData.name}</h1>
+          <h3 className={`card-detail__alt-name`}>{cardData.name}</h3>
 
-        <h3 className={`card-detail__alt-name help-text`}>{cardDetails.name}</h3>
+          <figure className={`card-detail__image`}>
+            <Image src={IMAGE_URLS.CHARACTERS.replace('$id', cardId)} withOverlay />
+            <Layer className={`border`} />
+            <Layer className={`bottom`} />
+          </figure>
+        </section>
 
-        <figure className={`card-detail__image-wrapper`}>
-          <img
-            className={`card-detail__image`}
-            src={CONSTANTS.CDN_IMAGE_URL_CHARACTER.replace('$id', cardId)}
-            alt="alt"
-          />
-          <Layer className={`border`} />
-          <Layer className={`bottom`} />
-        </figure>
-      </section>
+        <Button
+          className={`card-detail__details-title-button`}
+          role="button"
+          type="outline"
+          size="lg"
+          label="DETAILS"
+        />
 
-      <div className={`card-detail__details-title-button flex-center`}>
-        <Shape className={`polygon`} />
-        <span className={`card-detail__details-title flex-center btn-text-lg`}>DETAILS</span>
+        <section className={`card-detail__appeared-in`}>
+          <h4 className={`section-title`}>Appeared In</h4>
+          {cardData.films &&
+            cardData.films.map(film => (
+              <article
+                key={film.id}
+                className={`card-detail__appeared-in__film f-center-y`}
+                data-id={film.id}
+              >
+                <Image
+                  className={`card-detail__appeared-in__image`}
+                  src={IMAGE_URLS.FILMS.replace('$id', film.id)}
+                />
+                <h2 className={`card-detail__appeared-in__title`}>
+                  Episode {ROMAN_LETTERS[film.episode_id]}:<br />
+                  {film.title}
+                </h2>
+              </article>
+            ))}
+        </section>
+
+        <section className={`card-detail__related f-col`}>
+          <div className={`card-detail__related-tabs f-center-y`}>
+            <h4
+              ref={tabRef}
+              className={`section-title stats`}
+              onClick={changeTab('STATS')}
+              onMouseOver={handleTabIndicator()}
+            >
+              Stats
+            </h4>
+            <h4
+              className={`section-title vehicles`}
+              onClick={changeTab('VEHICLES')}
+              onMouseOver={handleTabIndicator()}
+            >
+              Vehicles
+            </h4>
+            <h4
+              className={`section-title starships`}
+              onClick={changeTab('STARSHIPS')}
+              onMouseOver={handleTabIndicator()}
+            >
+              Starships
+            </h4>
+            <Shape className={`card-detail__tab-active light-saber`} style={indicatorStyle} />
+          </div>
+
+          <div className={`carousel-view card-detail__related-view`}>
+            <div className={`carousel-slider`}>
+              <table
+                className={`card-detail__related-table stats carousel-group`}
+                style={{ transform: `translateX(-${activeTab.index * 100}%)` }}
+              >
+                <tbody>
+                  <tr>
+                    <td className={`table-header birth-year`}>Birth Year</td>
+                    <td className={`table-data birth-year`}>{cardData.birth_year}</td>
+                  </tr>
+                  <tr>
+                    <td className={`table-header species`}>Species</td>
+                    <td className={`table-data species`}>
+                      {cardData.species && cardData.species.name}
+                    </td>
+                  </tr>
+                  <tr>
+                    <td className={`table-header height`}>Height</td>
+                    <td className={`table-data height`}>{cardData.height}</td>
+                  </tr>
+                  <tr>
+                    <td className={`table-header mass`}>Mass</td>
+                    <td className={`table-data mass`}>{cardData.mass}</td>
+                  </tr>
+                  <tr>
+                    <td className={`table-header gender`}>Gender</td>
+                    <td className={`table-data gender`}>{cardData.gender}</td>
+                  </tr>
+                  <tr>
+                    <td className={`table-header hair-color`}>Hair Color</td>
+                    <td className={`table-data hair-color`}>{cardData.hair_color}</td>
+                  </tr>
+                  <tr>
+                    <td className={`table-header skin-color`}>Skin Color</td>
+                    <td className={`table-data skin-color`}>{cardData.skin_color}</td>
+                  </tr>
+                  <tr>
+                    <td className={`table-header eye-color`}>Eye Color</td>
+                    <td className={`table-data eye-color`}>{cardData.eye_color}</td>
+                  </tr>
+                  <tr>
+                    <td className={`table-header homeworld`}>Homeworld</td>
+                    <td className={`table-data homeworld`}>
+                      {cardData.homeworld && cardData.homeworld.name}
+                    </td>
+                  </tr>
+                </tbody>
+              </table>
+
+              <ul
+                className={`card-detail__related-table image-cards vehicles f-center-y carousel-group`}
+                style={{
+                  transform: `translateX(-${activeTab.index * 100}%)`,
+                  opacity: activeTab.index > 0 ? 1 : 0,
+                }}
+              >
+                <ul className={`card-detail__related-table__data f-col`}>
+                  {cardData.vehicles?.length ? (
+                    cardData.vehicles.map(vehicle => (
+                      <li
+                        key={vehicle.id}
+                        className={`card-detail__related-table__data-item`}
+                        data-id={vehicle.id}
+                      >
+                        <Image
+                          className={`card-detail__related-table__image`}
+                          src={IMAGE_URLS.VEHICLES.replace('$id', vehicle.id)}
+                        />
+                        <h2 className={`card-detail__related-table__data-item__title abs-center`}>
+                          {vehicle.name}
+                        </h2>
+                      </li>
+                    ))
+                  ) : (
+                    <EmptyData />
+                  )}
+                </ul>
+              </ul>
+
+              <ul
+                className={`card-detail__related-table image-cards starships flex-center-v carousel-group`}
+                style={{
+                  transform: `translateX(-${activeTab.index * 100}%)`,
+                  opacity: activeTab.index > 0 ? 1 : 0,
+                }}
+              >
+                <ul className={`card-detail__related-table__data f-col`}>
+                  {cardData.starships?.length ? (
+                    cardData.starships.map(starship => (
+                      <li
+                        key={starship.id}
+                        className={`card-detail__related-table__data-item`}
+                        data-id={starship.id}
+                      >
+                        <Image
+                          className={`card-detail__related-table__image`}
+                          src={IMAGE_URLS.STARSHIPS.replace('$id', starship.id)}
+                        />
+                        <h2 className={`card-detail__related-table__data-item__title abs-center`}>
+                          {starship.name}
+                        </h2>
+                      </li>
+                    ))
+                  ) : (
+                    <EmptyData />
+                  )}
+                </ul>
+              </ul>
+            </div>
+          </div>
+        </section>
       </div>
-
-      <section className={`card-detail__appeared-in`}>
-        <h4 className={`card-detail__appeared-in-title h2`}>Appeared In</h4>
-        {cardFilms.map(film => (
-          <div
-            key={film.id}
-            className={`card-detail__appeared-in__film flex-center-v`}
-            data-id={film.id}
-          >
-            <figure className={`card-detail__appeared-in__image`}>
-              <img
-                className={`card-detail__image shape__c polygon`}
-                src={CONSTANTS.CDN_IMAGE_URL_FILM.replace('$id', film.id)}
-                alt="alt"
-              />
-            </figure>
-            <h2 className={`card-detail__appeared-in__title body-text`}>
-              Episode {getRoman(film.episodeId)}:<br />
-              {film.name}
-            </h2>
-          </div>
-        ))}
-      </section>
-
-      <section className={`card-detail__related flex-col`}>
-        <div className={`card-detail__related-tabs flex-center-v`}>
-          <h4
-            ref={tabRef}
-            className={`card-detail__tab stats h2`}
-            onClick={changeTab('STATS')}
-            onMouseOver={handleTabIndicator()}
-          >
-            Stats
-          </h4>
-          <h4
-            className={`card-detail__tab vehicles h2`}
-            onClick={changeTab('VEHICLES')}
-            onMouseOver={handleTabIndicator()}
-          >
-            Vehicles
-          </h4>
-          <h4
-            className={`card-detail__tab starships h2`}
-            onClick={changeTab('STARSHIPS')}
-            onMouseOver={handleTabIndicator()}
-          >
-            Starships
-          </h4>
-          <Shape className={`card-detail__tab-active light-saber`} style={indicatorStyle} />
-        </div>
-
-        <div className={`carousel-view card-detail__related-view`}>
-          <div className={`carousel-slider`}>
-            <ul
-              className={`card-detail__related-table stats flex-center-v carousel-group`}
-              style={{ transform: `translateX(-${activeTab.index * 100}%)` }}
-            >
-              <ul className={`card-detail__related-table__headers flex-col`}>
-                <li className={`card-detail__related-table__header h3`}>Birth Year</li>
-                <li className={`card-detail__related-table__header h3`}>Species</li>
-                <li className={`card-detail__related-table__header h3`}>Height</li>
-                <li className={`card-detail__related-table__header h3`}>Mass</li>
-                <li className={`card-detail__related-table__header h3`}>Gender</li>
-                <li className={`card-detail__related-table__header h3`}>Hair Color</li>
-                <li className={`card-detail__related-table__header h3`}>Skin Color</li>
-                <li className={`card-detail__related-table__header h3`}>Eye Color</li>
-                <li className={`card-detail__related-table__header h3`}>Homeworld</li>
-              </ul>
-
-              <ul className={`card-detail__related-table__data flex-col`}>
-                <li className={`card-detail__related-table__data-item body-text birth-year`}>
-                  {cardDetails.birth_year}
-                </li>
-                <li className={`card-detail__related-table__data-item body-text`}>{cardSpecies}</li>
-                <li className={`card-detail__related-table__data-item body-text`}>
-                  {cardDetails.height}
-                </li>
-                <li className={`card-detail__related-table__data-item body-text`}>
-                  {cardDetails.mass}
-                </li>
-                <li className={`card-detail__related-table__data-item body-text`}>
-                  {cardDetails.gender}
-                </li>
-                <li className={`card-detail__related-table__data-item body-text`}>
-                  {cardDetails.hair_color}
-                </li>
-                <li className={`card-detail__related-table__data-item body-text`}>
-                  {cardDetails.skin_color}
-                </li>
-                <li className={`card-detail__related-table__data-item body-text`}>
-                  {cardDetails.eye_color}
-                </li>
-                <li className={`card-detail__related-table__data-item body-text`}>{cardPlanet}</li>
-              </ul>
-            </ul>
-
-            <ul
-              className={`card-detail__related-table image-cards vehicles flex-center-v carousel-group`}
-              style={{ transform: `translateX(-${activeTab.index * 100}%)` }}
-            >
-              <ul className={`card-detail__related-table__data flex-col`}>
-                {cardVehicles.length ? (
-                  cardVehicles.map(vehicle => (
-                    <li
-                      key={vehicle.id}
-                      className={`card-detail__related-table__data-item body-text`}
-                      data-id={vehicle.id}
-                    >
-                      <figure className={`card-detail__related-table__data-item__image-wrapper`}>
-                        <img
-                          className={`card-detail__related-table__data-item__image shape__c polygon`}
-                          src={CONSTANTS.CDN_IMAGE_URL_VEHICLE.replace('$id', vehicle.id)}
-                          alt="alt"
-                        />
-                      </figure>
-                      <h2
-                        className={`card-detail__related-table__data-item__title absolute-center body-text `}
-                      >
-                        {vehicle.name}
-                      </h2>
-                    </li>
-                  ))
-                ) : (
-                  <EmptyData />
-                )}
-              </ul>
-            </ul>
-
-            <ul
-              className={`card-detail__related-table image-cards starships flex-center-v carousel-group`}
-              style={{ transform: `translateX(-${activeTab.index * 100}%)` }}
-            >
-              <ul className={`card-detail__related-table__data flex-col`}>
-                {cardStarships.length ? (
-                  cardStarships.map(starship => (
-                    <li
-                      key={starship.id}
-                      className={`card-detail__related-table__data-item body-text`}
-                      data-id={starship.id}
-                    >
-                      <figure className={`card-detail__related-table__data-item__image-wrapper`}>
-                        <img
-                          className={`card-detail__related-table__data-item__image shape__c polygon`}
-                          src={CONSTANTS.CDN_IMAGE_URL_STARSHIP.replace('$id', starship.id)}
-                          alt="alt"
-                        />
-                      </figure>
-                      <h2
-                        className={`card-detail__related-table__data-item__title absolute-center body-text `}
-                      >
-                        {starship.name}
-                      </h2>
-                    </li>
-                  ))
-                ) : (
-                  <EmptyData />
-                )}
-              </ul>
-            </ul>
-          </div>
-        </div>
-      </section>
     </div>
   );
 };

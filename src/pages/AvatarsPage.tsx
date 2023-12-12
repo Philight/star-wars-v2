@@ -1,5 +1,4 @@
-// import React from 'react';
-import { useNavigate, useOutletContext } from 'react-router-dom';
+import { useOutletContext } from 'react-router-dom';
 
 import { CardsList } from '@components/card';
 import { withPageData } from '@utils';

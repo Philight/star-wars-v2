@@ -1,7 +1,7 @@
 import React from 'react';
 import { motion } from 'framer-motion';
 
-import { Shape, Layer } from '@components/graphic';
+import { Shape } from '@components/graphic';
 import { Image } from '@components/media';
 import { IMAGE_URLS } from '@data';
 
@@ -29,7 +29,7 @@ export const Card = (props: IComponentProps): IGenericComponent => {
         <Shape className={`polygon`} />
         <h3 className={`f-center`}>{data.name}</h3>
       </div>
-      <h3 className={`card__secondary-title f-center`}>{data.name}</h3>
+      <h3 className={`card__secondary-title f-center`}>{data.birth_year}</h3>
     </motion.div>
   );
 };

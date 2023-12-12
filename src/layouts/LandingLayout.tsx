@@ -1,8 +1,14 @@
 import React from 'react';
 import { Outlet } from 'react-router-dom';
-import { motion, useMotionValue, useTransform, useDragControls, animate } from 'framer-motion';
+import {
+  motion,
+  useMotionValue,
+  useTransform,
+  useDragControls,
+  animate,
+  MotionValue,
+} from 'framer-motion';
 
-import { Header, Footer } from '@components/layout';
 import { Logo, Icon, Layer } from '@components/graphic';
 import { Image } from '@components/media';
 import { usePageData, useDeviceDimensions } from '@utils';
@@ -21,9 +27,8 @@ const ARROWS_ANIM = {
   },
 };
 
-import { IGenericComponent, IGenericProps } from '@@types/generic-types';
+import { IGenericComponent, IGenericProps, TGenericObject } from '@@types/generic-types';
 interface IComponentProps extends IGenericProps {
-  //  Page?: React.FC | React.Component | React.ReactNode | JSX.Element | React.ElementType;
   Page?: React.ElementType;
 }
 
@@ -35,8 +40,8 @@ const LandingLayout = ({ Page, ...rest }: IComponentProps): IGenericComponent =>
 
   const dragControls = useDragControls();
   const [isDragging, setIsDragging] = React.useState(false);
-  const dragStart = React.useRef(null);
-  const overlayRef = React.useRef(null);
+  const dragStart = React.useRef<unknown | null>(null);
+  const overlayRef = React.useRef<string | null>(null);
 
   const mDragX = useMotionValue(0);
   const mDragY = useMotionValue(0);
@@ -50,10 +55,11 @@ const LandingLayout = ({ Page, ...rest }: IComponentProps): IGenericComponent =>
   const mCurtainStage = useMotionValue(0);
   const aCurtainY = useTransform(mCurtainStage, [0, 1], ['100%', '0%']);
 
-  const MIN_SWIPE_DISTANCE = -300; // ↑ UP
   const DRAG_ZONE_TOP = (DEVICE_HEIGHT * 1) / 5;
 
-  const ANIMATIONS = {
+  const ANIMATIONS: {
+    [key: string]: MotionValue<any>;
+  } = {
     draggingStage: mDragStage,
     curtainStage: mCurtainStage,
   };
@@ -62,12 +68,13 @@ const LandingLayout = ({ Page, ...rest }: IComponentProps): IGenericComponent =>
     element: string,
     fromValue: number,
     toValue: number,
-    options?: unknown = {},
-  ): (() => void) => {
+    options: TGenericObject = {},
+  ): Promise<any> => {
     const { delay, ease, duration } = options;
     const motionValue = ANIMATIONS[element];
     return new Promise(resolve => {
       motionValue.set(fromValue);
+      // @ts-ignore
       const animation = animate(motionValue, toValue, {
         ease: ease ?? 'linear',
         duration: duration ?? 0.4,
@@ -80,9 +87,7 @@ const LandingLayout = ({ Page, ...rest }: IComponentProps): IGenericComponent =>
     });
   };
 
-  const runAnimations = (animationType): void => {
-    console.log('runAnimations overlayRef.current', overlayRef.current);
-    console.log('runAnimations animationType', animationType);
+  const runAnimations = (animationType: string): void => {
     overlayRef.current = animationType;
 
     if (animationType === 'radius') {
@@ -112,30 +117,29 @@ const LandingLayout = ({ Page, ...rest }: IComponentProps): IGenericComponent =>
     }
   };
 
-  const onDragStart = (event, info) => {
-    console.log('onDragStart', event, info.point.x, info.point.y);
+  const onDragStart = (_: any, info: any): void => {
     dragStart.current = {
       x: info.point.x,
       y: info.point.y,
     };
-    //    dragControls.start(event)
     setIsDragging(true);
   };
 
-  const onDragEnd = (event, info) => {
-    const diffX = info.point.x - dragStart.current.x;
-    const diffY = info.point.y - dragStart.current.y;
-    console.log('onDragEnd dragStart.current', dragStart.current);
-    console.log('onDragEnd difference X', diffX);
-    console.log('onDragEnd difference Y', diffY);
-    //    if (diffY <= MIN_SWIPE_DISTANCE) {
-    console.log('onDragEndDRAG_ZONE_TOP', DRAG_ZONE_TOP);
+  const onDragEnd = (_: any, info: any): void => {
     if (info.point.y <= DRAG_ZONE_TOP) {
       // change stage
       runAnimations('radius');
     }
     dragStart.current = null;
     setIsDragging(false);
+  };
+
+  const outletContext = {
+    layoutProps: {
+      animationProps: { motionValues: { mDragStage } },
+      style: { zIndex: aPageZ },
+    },
+    setPageData,
   };
 
   return (
@@ -161,8 +165,9 @@ const LandingLayout = ({ Page, ...rest }: IComponentProps): IGenericComponent =>
           style={{ opacity: aDragOpacity, x: mDragX, y: mDragY }}
         />
         <motion.div
-          className={[`draggable f-center`, isDragging && 'dragging'].css()}
+          className={[`draggable f-center relative`, isDragging && 'dragging'].css()}
           style={{
+            touchAction: 'none',
             x: mDragX,
             y: mDragY,
             cursor: 'grab',
@@ -170,30 +175,24 @@ const LandingLayout = ({ Page, ...rest }: IComponentProps): IGenericComponent =>
           }}
           drag
           dragConstraints={{
-            //            top: '-50%',
             top: -DEVICE_HEIGHT / 4,
             left: -10,
             right: 10,
             bottom: 0,
           }}
+          dragElastic={0.5}
           dragControls={dragControls}
-          //        onPointerDown={onDragStart}
           onDragStart={onDragStart}
           onDragEnd={onDragEnd}
-          //        dragListener={false}
-          //                dragTransition={{ bounceStiffness: 600, bounceDamping: 20 }}
           whileTap={{ cursor: 'grabbing' }}
         >
-          <Logo
-            className={``}
-            //        animate={ARROWS_ANIM.animate}
-            //        transition={ARROWS_ANIM.transition}
-          />
+          <div className={[`drag-view abs-center`].css()} />
+          <Logo />
         </motion.div>
       </motion.section>
       <Layer
         className={`layout__overlay radius`}
-        style={{ scale: overlayRef.current === 'radius' ? aRadiusScale : 0 }}
+        style={{ scale: overlayRef.current === 'radius' ? aRadiusScale : null }}
       />
 
       <section
@@ -201,7 +200,7 @@ const LandingLayout = ({ Page, ...rest }: IComponentProps): IGenericComponent =>
           `layout__continue f-center f-col abs-center-x`,
           isDragging && 'opacity-0',
         ].css()}
-        onClick={() => {
+        onClick={(): void => {
           overlayRef.current = 'curtain';
           runAnimations('curtain');
         }}
@@ -217,15 +216,7 @@ const LandingLayout = ({ Page, ...rest }: IComponentProps): IGenericComponent =>
       <Layer className={`layout__overlay curtain`} style={{ y: aCurtainY }} />
 
       {Page && <Page />}
-      <Outlet
-        context={{
-          layoutProps: {
-            animationProps: { motionValues: { mDragStage } },
-            style: { zIndex: aPageZ },
-          },
-          setPageData,
-        }}
-      />
+      <Outlet context={outletContext} />
     </div>
   );
 };

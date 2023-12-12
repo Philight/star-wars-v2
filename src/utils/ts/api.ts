@@ -1,7 +1,7 @@
 import axios, { Method, AxiosRequestConfig, AxiosResponse } from 'axios';
 
 export interface IFetchArgs {
-  url: string;
+  url: string | URL;
   method: Method;
   data?: unknown;
   headers?: { [key: string]: string };
@@ -14,7 +14,7 @@ export const fetchData = async ({
   headers,
 }: IFetchArgs): Promise<AxiosResponse> => {
   const options: AxiosRequestConfig = {
-    url,
+    url: url as string,
     method,
     headers: {
       'Content-Type': 'application/json',

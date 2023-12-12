@@ -97,8 +97,8 @@
 }
 .heading--lg {
   @apply text-3xl-plus tab-sm:text-3xl desk-lg:text-4xl; /*  */
-  @apply font-semibold;
-  @apply tracking-2;
+  @apply font-normal;
+  @apply tracking-1;
 }
 .heading--md {
   @apply text-2xl tab-sm:text-xl desk-lg:text-2xl;
@@ -139,7 +139,12 @@
 }
 .body--sm {
   @apply text-sm;
+  @apply font-normal;
   @apply tracking-1;
+}
+.body--xs {
+  @apply text-xs tab-sm:text-sm;
+  @apply tracking-2;
 }
 
 .btn-text {
@@ -163,6 +168,7 @@
 }
 .highlight-text--md {
   @apply text-xs-plus tab-sm:text-sm;
+  @apply tracking-1;
 }
 
 .help-text {
@@ -171,6 +177,7 @@
 }
 .help-text--md {
   @apply text-5xs tab-sm:text-sm;
+  @apply tracking-4;
 }
 
 /** 

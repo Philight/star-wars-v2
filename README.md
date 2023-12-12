@@ -1,3 +1,8 @@
+# TODO
+
+- CardsList - add Table for memorizing character data
+- Characters categorization - divide into classes / add color
+
 # App
 
 > Frontend: React + TypeScript + TailwindCSS + Vite
